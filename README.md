@@ -2,6 +2,8 @@
 
 A modern, interactive platform for exploring and comparing programming languages. Built with SvelteKit and TailwindCSS.
 
+UPDATE: Still Work in progress, would appreciate it with some of external contribution
+
 ## ✨ Features
 
 - 🔍 Interactive language comparison and filtering
