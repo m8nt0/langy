@@ -1,0 +1,31 @@
+[data-theme="light"] {
+	/* Light Theme Colors */
+	--background-primary: #ffffff;
+	--background-secondary: #f5f5f5;
+	--background-tertiary: #e5e5e5;
+	
+	--text-primary: #000000;
+	--text-secondary: #666666;
+	--text-tertiary: #999999;
+	
+	--border-color: #000000;
+	--border-light: #e0e0e0;
+	
+	--accent-primary: #f0f7ff;
+	--accent-secondary: #d1d1d1;
+
+	--icon-filter: none;
+	--icon-color: #000000;
+	
+	/* Transitions */
+	--transition-color: color 0.3s ease;
+	--transition-background: background-color 0.3s ease;
+	--transition-border: border-color 0.3s ease;
+	
+	/* Spacing */
+	--space-xs: 4px;
+	--space-sm: 8px;
+	--space-md: 16px;
+	--space-lg: 24px;
+	--space-xl: 32px;
+}   

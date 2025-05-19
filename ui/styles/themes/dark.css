@@ -1,0 +1,20 @@
+[data-theme="dark"] 
+{
+	/* Dark Theme Colors */
+	--background-primary: #121212;
+	--background-secondary: #1e1e1e;
+	--background-tertiary: #2d2d2d;
+	
+	--text-primary: #ffffff;
+	--text-secondary: #a0a0a0;
+	--text-tertiary: #808080;
+	
+	--border-color: #404040;
+	--border-light: #333333;
+	
+	--accent-primary: #000000;
+	--accent-secondary: #404040;
+
+	--icon-filter: invert(1);
+	--icon-color: #ffffff;
+}

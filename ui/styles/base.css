@@ -1,0 +1,88 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.card {
+		@apply rounded-lg bg-white shadow-md transition-shadow duration-300 hover:shadow-lg;
+	}
+
+	.tag {
+		@apply mr-2 rounded-full px-2 py-1 text-sm text-white;
+	}
+}
+
+/* Base Styles */
+body {
+	background-color: var(--background-primary);
+	color: var(--text-primary);
+	transition: 
+		var(--transition-color),
+		var(--transition-background);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+	color: var(--text-primary);
+}
+
+p {
+	color: var(--text-secondary);
+}
+
+/* Buttons and Interactive Elements */
+button {
+	transition: 
+		var(--transition-color),
+		var(--transition-background),
+		var(--transition-border);
+}
+
+/* Links */
+a {
+	color: var(--text-primary);
+	transition: var(--transition-color);
+}
+
+a:hover {
+	color: var(--text-secondary);
+}
+
+/* Inputs */
+input, textarea, select {
+	background-color: var(--background-secondary);
+	color: var(--text-primary);
+	border: 1px solid var(--border-color);
+	transition: 
+		var(--transition-color),
+		var(--transition-background),
+		var(--transition-border);
+}
+
+/* Cards and Containers */
+.card {
+	background-color: var(--background-primary);
+	border: 1px solid var(--border-color);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--text-tertiary);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--text-secondary);
+}
