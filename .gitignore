@@ -1,4 +1,4 @@
-node_modules
+/node_modules
 .env
 .env.local
 .env.development.local
@@ -6,5 +6,5 @@ node_modules
 .env.production.local
 .env.development
 .env.test
-/*/node_modules
-*/node_modules
+.env.production
+
