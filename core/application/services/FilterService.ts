@@ -1,17 +1,37 @@
+// Handles filtering logic
+
 import { TechObject } from '../../domain/entities/TechObject';
 import { FilterCriteria } from '../../domain/value-objects';
 import { TechObjectRepository, CachePort, SearchPort } from '../ports';
 import { 
-  FilterCondition, 
-  FilterGroup, 
-  FilterOperator, 
-  FilterCombinator,
-  FilterDefinition,
-  FilterResult,
-  FilterSuggestion
+  FilterGroup as IFilterGroup,
+  FilterCondition as IFilterCondition,
+  FilterOperator as IFilterOperator,
+  FilterCombinator as IFilterCombinator
 } from '../../shared/types/FilterTypes';
 import { ValidationUtils } from '../../shared/utils/ValidationUtils';
 import { ValidationError } from '../../shared/errors/ValidationError';
+
+// Local type definitions
+export interface FilterResult<T> {
+  items: T[];
+  total: number;
+  appliedFilters: IFilterGroup[];
+}
+
+export interface FilterSuggestion {
+  type: 'REFINEMENT' | 'RELATED';
+  field?: string;
+  values?: any[];
+  filters?: Array<{ name: string; description: string }>;
+  description: string;
+}
+
+interface SearchResult {
+  name: string;
+  description: string;
+  [key: string]: any;
+}
 
 export class FilterService {
   constructor(
@@ -56,7 +76,7 @@ export class FilterService {
     });
   }
 
-  private validateFilterGroup(group: FilterGroup): boolean {
+  private validateFilterGroup(group: IFilterGroup): boolean {
     try {
       ValidationUtils.validateArray(group.conditions, 'conditions', {
         minLength: 1
@@ -76,11 +96,11 @@ export class FilterService {
 
   async combineFilters(
     filters: FilterCriteria[],
-    combinator: FilterCombinator = FilterCombinator.AND
+    combinator: IFilterCombinator = IFilterCombinator.AND
   ): Promise<FilterCriteria> {
     const combinedGroups = filters.reduce((acc, filter) => {
       return [...acc, ...filter.getGroups()];
-    }, [] as FilterGroup[]);
+    }, [] as IFilterGroup[]);
 
     return new FilterCriteria(
       combinedGroups,
@@ -108,7 +128,7 @@ export class FilterService {
         return this.evaluateCondition(value, condition);
       });
 
-      return group.combinator === FilterCombinator.AND
+      return group.combinator === IFilterCombinator.AND
         ? results.every(r => r)
         : results.some(r => r);
     });
@@ -122,26 +142,26 @@ export class FilterService {
         return object.getName();
       case 'type':
         return object.getType();
-      case 'metadata':
-        return object.getMetadata();
+      case 'description':
+        return object.getDescription();
       default:
         return undefined;
     }
   }
 
-  private evaluateCondition(value: any, condition: FilterCondition): boolean {
+  private evaluateCondition(value: any, condition: IFilterCondition): boolean {
     switch (condition.operator) {
-      case FilterOperator.EQUALS:
+      case IFilterOperator.EQUALS:
         return value === condition.value;
-      case FilterOperator.NOT_EQUALS:
+      case IFilterOperator.NOT_EQUALS:
         return value !== condition.value;
-      case FilterOperator.CONTAINS:
+      case IFilterOperator.CONTAINS:
         return typeof value === 'string' && 
           value.toLowerCase().includes(condition.value.toLowerCase());
-      case FilterOperator.IN:
+      case IFilterOperator.IN:
         return Array.isArray(condition.value) && 
           condition.value.includes(value);
-      case FilterOperator.EXISTS:
+      case IFilterOperator.EXISTS:
         return value !== undefined && value !== null;
       default:
         return false;
@@ -166,11 +186,12 @@ export class FilterService {
     }
 
     // Suggest related filters based on search patterns
-    const searchResults = await this.search.similar(filter.getMetadata().name || '', {
+    const searchResults = await this.search.similar<SearchResult>(filter.getMetadata().name || '', {
       fields: ['name', 'description'],
       size: 5
     });
 
+    if (Array.isArray(searchResults)) {
     suggestions.push({
       type: 'RELATED',
       filters: searchResults.map(result => ({
@@ -179,6 +200,7 @@ export class FilterService {
       })),
       description: 'Similar filters you might be interested in'
     });
+    }
 
     return suggestions;
   }
@@ -203,11 +225,10 @@ export class FilterService {
   private buildFilterMetadata(
     filter: FilterCriteria,
     objects: TechObject[]
-  ): FilterMetadata {
+  ): FilterResult<TechObject>['metadata'] {
     return {
-      matchCount: objects.length,
-      appliedAt: new Date(),
-      filter: filter.getMetadata()
+      executionTime: 0,
+      timestamp: new Date()
     };
   }
 
@@ -219,7 +240,7 @@ export class FilterService {
 export interface FilterResult<T> {
   items: T[];
   total: number;
-  appliedFilters: FilterGroup[];
+  appliedFilters: IFilterGroup[];
   metadata: FilterMetadata;
 }
 

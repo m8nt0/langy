@@ -1,3 +1,5 @@
+// Validation error handling
+
 import { DomainError, DomainErrorCodes } from './DomainError';
 
 export class ValidationError extends DomainError {

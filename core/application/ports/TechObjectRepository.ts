@@ -1,5 +1,9 @@
-import { TechObject, AbstractionLevel, TechObjectType } from '../../domain/entities/TechObject';
+// Data persistence interface
+
+import { TechObject } from '../../domain/entities/TechObject';
 import { FilterCriteria } from '../../domain/value-objects';
+import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
+import { TechObjectType } from '../../shared/constants/ObjectTypes';
 
 export interface TechObjectRepository {
   findById(id: string): Promise<TechObject | null>;

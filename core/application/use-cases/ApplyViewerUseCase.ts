@@ -1,3 +1,5 @@
+// Switch viewer lenses
+
 import { TechObject } from '../../domain/entities/TechObject';
 import { ViewerData, StructuralData } from '../../domain/value-objects';
 import { ViewerService } from '../services';

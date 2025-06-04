@@ -1,3 +1,5 @@
+// Manages BY/FOR relationships
+
 import { TechObject } from '../../domain/entities/TechObject';
 import { StructuralData, RelationshipType } from '../../domain/value-objects';
 import { TechObjectRepository, CachePort } from '../ports';

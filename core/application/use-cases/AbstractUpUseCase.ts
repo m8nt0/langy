@@ -1,4 +1,7 @@
-import { TechObject, AbstractionLevel } from '../../domain/entities/TechObject';
+// Navigate to higher abstraction levels
+
+import { TechObject } from '../../domain/entities/TechObject';
+import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
 import { NavigationContext, StructuralData } from '../../domain/value-objects';
 import { AbstractionHierarchy } from '../../domain/aggregates/AbstractionHierarchy';
 import { NavigationService, ViewerService } from '../services';

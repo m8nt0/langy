@@ -1,3 +1,5 @@
+// Retrieve card information
+
 import { TechObject } from '../../domain/entities/TechObject';
 import { ViewerData } from '../../domain/value-objects';
 import { 
@@ -100,7 +102,7 @@ export class GetCardDataUseCase {
   }
 
   private generateHighlights(object: TechObject): CardHighlight[] {
-    const metadata = object.getMetadata();
+    const metadata = object.getDescription();
     return [
       {
         type: 'KEY_FEATURE',
@@ -130,11 +132,11 @@ export class GetCardDataUseCase {
   }
 
   private generateTimeline(object: TechObject): string {
-    return `Created on ${object.getMetadata().createdAt?.toLocaleDateString()}`;
+    return `Created on ${object.getDescription().createdAt?.toLocaleDateString()}`;
   }
 
   private getObjectPurpose(object: TechObject): string {
-    return object.getMetadata().purpose || 'serves a specific technical purpose';
+    return object.getDescription().purpose || 'serves a specific technical purpose';
   }
 
   private calculateComplexity(

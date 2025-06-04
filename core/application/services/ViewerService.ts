@@ -1,3 +1,5 @@
+// Manages different visualization modes
+
 import { TechObject } from '../../domain/entities/TechObject';
 import { 
   ViewerData, 

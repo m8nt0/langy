@@ -1,4 +1,7 @@
-import { TechObject, AbstractionLevel } from '../../domain/entities/TechObject';
+// Provides search functionality
+
+import { TechObject } from '../../domain/entities/TechObject';
+import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
 import { SearchPort, CachePort } from '../ports';
 
 export class SearchService {

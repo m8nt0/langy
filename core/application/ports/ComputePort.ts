@@ -1,3 +1,5 @@
+// Heavy computation handling
+
 export interface ComputeJob {
   id: string;
   type: string;

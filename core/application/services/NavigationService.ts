@@ -1,3 +1,5 @@
+// Handles abstraction level transitions
+
 import { TechObject } from '../../domain/entities/TechObject';
 import { NavigationContext, StructuralData } from '../../domain/value-objects';
 import { AbstractionHierarchy } from '../../domain/aggregates/AbstractionHierarchy';

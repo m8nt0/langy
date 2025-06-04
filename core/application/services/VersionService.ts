@@ -1,3 +1,5 @@
+// Handles version management
+
 import { TechObject } from '../../domain/entities/TechObject';
 import { Version } from '../../domain/entities/Version';
 import { Timeline, TimelineEvent } from '../../domain/value-objects';

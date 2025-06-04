@@ -1,4 +1,7 @@
-import { TechObject, AbstractionLevel } from '../../domain/entities/TechObject';
+// Search for objects
+
+import { TechObject } from '../../domain/entities/TechObject';
+import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
 import { SearchService } from '../services';
 
 export class SearchObjectsUseCase {

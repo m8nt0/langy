@@ -1,3 +1,5 @@
+// Apply filter criteria
+
 import { TechObject } from '../../domain/entities/TechObject';
 import { FilterCriteria } from '../../domain/value-objects';
 import { FilterService } from '../services';

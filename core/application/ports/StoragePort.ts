@@ -1,3 +1,5 @@
+// Storage abstraction
+
 export interface StorageOptions {
   expiration?: number;  // Time in milliseconds
   compression?: boolean;

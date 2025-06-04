@@ -1,3 +1,5 @@
+// Code visualization integration
+
 import { TechObject } from '../../domain/entities/TechObject';
 import { ViewerData } from '../../domain/value-objects';
 

@@ -1,3 +1,5 @@
+// Navigation-specific errors
+
 import { DomainError } from './DomainError';
 
 export class NavigationError extends DomainError {

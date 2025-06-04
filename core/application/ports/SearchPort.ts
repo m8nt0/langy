@@ -1,3 +1,5 @@
+// Search engine interface
+
 export interface SearchQuery {
   text?: string;
   filters?: Record<string, any>;
