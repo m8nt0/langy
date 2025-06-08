@@ -1,9 +1,14 @@
-import { AbstractionLevel, TechObjectType } from '../entities/TechObject';
-import { ViewerType } from './ViewerData';
+import { VerticalLevel } from '../../../VerticalLevel';
+import { HorizontalLevel } from './HorizontalLevel';
+import { ViewerType } from '../../../ViewerData';
 
 /**
  * Represents filter criteria for tech objects
  */
+
+// Filters determine which objects are shown in the current viewer, based on their data.
+
+// allow users to apply filters globally or restrict them to the context of a specific viewer (e.g., only show objects with a certain timeline in the Temporal Viewer).
 
 export enum FilterOperator {
     EQUALS = 'EQUALS',
@@ -25,6 +30,7 @@ export enum FilterCombinator {
 }
 
 export interface FilterCondition {
+    // field might refer to level?
     field: string;
     operator: FilterOperator;
     value: any;
@@ -37,24 +43,12 @@ export interface FilterGroup {
     groups?: FilterGroup[];
 }
 
-export interface FilterMetadata {
-    name?: string;
-    description?: string;
-    createdAt: Date;
-    updatedAt: Date;
-    creator?: string;
-    isDefault?: boolean;
-    isFavorite?: boolean;
-    tags?: string[];
-}
-
 /**
  * Immutable value object representing filter criteria
  */
 export class FilterCriteria {
     constructor(
         private readonly groups: FilterGroup[],
-        private readonly metadata: FilterMetadata,
         private readonly context: FilterContext = {}
     ) {
         Object.freeze(this);
@@ -64,70 +58,75 @@ export class FilterCriteria {
         return [...this.groups];
     }
 
-    getMetadata(): FilterMetadata {
-        return { ...this.metadata };
-    }
-
     getContext(): FilterContext {
         return { ...this.context };
     }
 
     withGroups(groups: FilterGroup[]): FilterCriteria {
-        return new FilterCriteria(groups, this.metadata, this.context);
-    }
-
-    withMetadata(metadata: Partial<FilterMetadata>): FilterCriteria {
-        return new FilterCriteria(
-            this.groups,
-            { ...this.metadata, ...metadata, updatedAt: new Date() },
-            this.context
-        );
+        return new FilterCriteria(groups, this.context);
     }
 
     withContext(context: Partial<FilterContext>): FilterCriteria {
         return new FilterCriteria(
             this.groups,
-            this.metadata,
             { ...this.context, ...context }
         );
     }
 
     // Factory methods for common filters
-    static createAbstractionLevelFilter(level: AbstractionLevel): FilterCriteria {
+    static createVerticalLevelFilter(level: VerticalLevel): FilterCriteria {
         return new FilterCriteria(
             [{
                 conditions: [{
-                    field: 'abstractionLevel',
+                    field: 'verticalLevel',
                     operator: FilterOperator.EQUALS,
                     value: level
                 }],
                 combinator: FilterCombinator.AND
             }],
             {
-                name: `Abstraction Level ${level}`,
+                name: `Vertical Level ${level}`,
                 createdAt: new Date(),
                 updatedAt: new Date()
             }
         );
     }
 
-    static createTypeFilter(type: TechObjectType): FilterCriteria {
+    static createHorizontalLevelFilter(level: VerticalLevel): FilterCriteria {
         return new FilterCriteria(
             [{
                 conditions: [{
-                    field: 'type',
+                    field: 'horizontalLevel',
                     operator: FilterOperator.EQUALS,
-                    value: type
+                    value: level
                 }],
                 combinator: FilterCombinator.AND
             }],
             {
-                name: `Type ${type}`,
+                name: `Horizontal Level ${level}`,
                 createdAt: new Date(),
                 updatedAt: new Date()
             }
         );
     }
+
+    // static createTypeFilter(type: TechObjectType): FilterCriteria {
+    //     return new FilterCriteria(
+    //         [{
+    //             conditions: [{
+    //                 field: 'type',
+    //                 operator: FilterOperator.EQUALS,
+    //                 value: type
+    //             }],
+    //             combinator: FilterCombinator.AND
+    //         }],
+    //         {
+    //             name: `Type ${type}`,
+    //             createdAt: new Date(),
+    //             updatedAt: new Date()
+    //         }
+    //     );
+    // }
 
     static createViewerFilter(viewerType: ViewerType): FilterCriteria {
         return new FilterCriteria(
@@ -213,8 +212,9 @@ export class FilterCriteria {
 // Additional types
 export interface FilterContext {
     appliedViewers?: ViewerType[];
-    selectedAbstractionLevels?: AbstractionLevel[];
-    selectedTypes?: TechObjectType[];
+    selectedVerticalLevels?: VerticalLevel[];
+    selectedHorizontalLevels?: HorizontalLevel[];
+    // selectedTypes?: TechObjectType[];
     timeRange?: { start: Date; end: Date };
     [key: string]: any;
 } 

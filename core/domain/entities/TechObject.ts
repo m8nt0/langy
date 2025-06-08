@@ -1,36 +1,47 @@
-import { UUID, Description, Identifiable, Named, Versioned } from '../../shared/types/Common';
-import { ValidationUtils } from '../../shared/utils/ValidationUtils';
-import { TechObjectType } from '../../shared/constants/ObjectTypes';
-import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
-import { DomainError } from '../../shared/errors/DomainError';
-import { Version } from './Version';
-import { Relationship, RelationshipMetadata } from './Relationship';
+import { VerticalLevel } from '../../../VerticalLevel';
+import { HorizontalLevel } from '../value-objects/HorizontalLevel';
+import { VisualizerApiPort } from '../../application/ports';
+import { ViewerData } from '../value-objects';
+// import { v4 as uuidv4 } from 'uuid';
 
 /**
- * Base class for all technology objects in the system.
- * This serves as the foundation for programming languages, libraries, frameworks, etc.
+ * TechObject represents one technology object version,
+ * with vertical and horizontal levels defining its type and version level.
+ * Supports parent-child relationship to form version hierarchy.
  */
-export class TechObject implements Identifiable, Named, Versioned {
+
+export class TechObject {
+  private readonly id: string;
+  private tags: { For: string[]; By: string[] };
+  private name: string;
+  // Not seen
+  private verticalLevel: VerticalLevel;
+  private horizontalLevel: HorizontalLevel;
+
+  private viewerData: ViewerData;
+  private visualizerAPI: VisualizerApiPort;
+  // Version hierarchy references
+  private parentId?: string;
+  private childrenIds: string[] = [];
+
   constructor(
-    public readonly id: UUID,
-    public name: string,
-    public description: Description,
-    public type: TechObjectType,
-    public level: AbstractionLevel,
-    public version: string,
-    private relationships: Relationship[],
+    id: string,
+    name: string,
+    verticalLevel: VerticalLevel,
+    horizontalLevel: HorizontalLevel,
+    tags: { For: string[]; By: string[] } = { For: [], By: [] },
+    parentId?: string,
+
   ) {
-    this.validate();
+    this.id = id;
+    this.name = name;
+    this.verticalLevel = verticalLevel;
+    this.horizontalLevel = horizontalLevel;
+    this.tags = tags;
+    this.parentId = parentId;
   }
 
-  private validate(): void {
-    ValidationUtils.validateUUID(this.id);
-    ValidationUtils.validateString(this.name, 'name', { minLength: 1 });
-    ValidationUtils.validateObjectType(this.type);
-    ValidationUtils.validateAbstractionLevel(this.level);
-  }
-
-  public getId(): UUID {
+  public getId(): string {
     return this.id;
   }
 
@@ -38,138 +49,43 @@ export class TechObject implements Identifiable, Named, Versioned {
     return this.name;
   }
 
-  public getType(): TechObjectType {
-    return this.type;
+  public getTags(): { For: string[]; By: string[] } {
+    return this.tags;
   }
 
-  public getAbstractionLevel(): AbstractionLevel {
-    return this.level;
+  public getVerticalLevel(): VerticalLevel {
+    return this.verticalLevel;
   }
 
-  public getDescription(): Description {
-    return this.description;
+  public getHorizontalLevel(): HorizontalLevel {
+    return this.horizontalLevel;
   }
 
-  public getVersion(): string {
-    return this.version;
+  public getParentId(): string | undefined {
+    return this.parentId;
   }
 
-  public getRelationships(): Relationship[] {
-    return [...this.relationships];
+  public getChildrenIds(): string[] {
+    return [...this.childrenIds];
   }
 
-  public update(updates: {
-    name?: string;
-    type?: TechObjectType;
-    level?: AbstractionLevel;
-    description?: Partial<Description>;
-  }): void {
-    if (updates.name) {
-      ValidationUtils.validateString(updates.name, 'name', { minLength: 1 });
-      this.name = updates.name;
-    }
-
-    if (updates.type) {
-      ValidationUtils.validateObjectType(updates.type);
-      this.type = updates.type;
-    }
-
-    if (updates.level) {
-      ValidationUtils.validateAbstractionLevel(updates.level);
-      this.level = updates.level;
-    }
-
-    if (updates.description) {
-      this.description = {
-        ...this.description,
-        ...updates.description,
-      };
+  // Add child version
+  public addChild(childId: string): void {
+    if (!this.childrenIds.includes(childId)) {
+      this.childrenIds.push(childId);
     }
   }
 
-  public toJSON(): Record<string, any> {
-    return {
-      id: this.id,
-      name: this.name,
-      description: this.description,
-      type: this.type,
-      level: this.level,
-      version: this.version,
-      relationships: this.relationships,
-    };
+  // Update fields selectively
+  public update(
+    name?: string,
+    verticalLevel?: VerticalLevel,
+    horizontalLevel?: HorizontalLevel,
+    tags?: { For: string[]; By: string[] }
+  ): void {
+    if (name) this.name = name;
+    if (verticalLevel) this.verticalLevel = verticalLevel;
+    if (horizontalLevel) this.horizontalLevel = horizontalLevel;
+    if (tags) this.tags = tags;
   }
-
-  public static fromJSON(json: Record<string, any>): TechObject {
-    try {
-      return new TechObject(
-        json.id,
-        json.name,
-        json.description,
-        json.type,
-        json.level,
-        json.version,
-        json.relationships,
-      );
-    } catch (error) {
-      throw new DomainError(
-        'Failed to create TechObject from JSON',
-        'INVALID_JSON',
-        { cause: error }
-      );
-    }
-  }
-
-  // Relationship management
-  addRelationship(relationship: Relationship): void {
-    this.relationships.push(relationship);
-  }
-
-  removeRelationship(relationshipId: string): void {
-    this.relationships = this.relationships.filter(r => r.getId() !== relationshipId);
-  }
-
-  // Version management
-  updateVersion(newVersion: Version): void {
-    this.version = newVersion.toString();
-  }
-
-  // Validation
-  // validate(): boolean {
-  //   return !!(
-  //     this.id &&
-  //     this.name &&
-  //     this.type &&
-  //     this.level &&
-  //     this.version
-  //   );
-  // }
 }
-
-// Types and interfaces
-export enum RelationshipType {
-  DEPENDS_ON = 'DEPENDS_ON',
-  EXTENDS = 'EXTENDS',
-  IMPLEMENTS = 'IMPLEMENTS',
-  USES = 'USES',
-  BUILDS_ON = 'BUILDS_ON',
-  ABSTRACTS = 'ABSTRACTS',
-  // Inverse relationships
-  DEPENDANT_OF = 'DEPENDANT_OF',
-  EXTENDED_BY = 'EXTENDED_BY',
-  IMPLEMENTED_BY = 'IMPLEMENTED_BY',
-  USED_BY = 'USED_BY',
-  BUILT_BY = 'BUILT_BY',
-  ABSTRACTED_BY = 'ABSTRACTED_BY'
-}
-
-export interface TechObjectMetadata {
-  creator: string;
-  createdAt: Date;
-  updatedAt: Date;
-  tags: string[];
-  url?: string;
-  documentation?: string;
-  repository?: string;
-  license?: string;
-  [key: string]: any; // Allow for extensible metadata
-} 

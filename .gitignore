@@ -8,3 +8,5 @@
 .env.test
 .env.production
 
+.thoughts.md
+.thoughts.txt

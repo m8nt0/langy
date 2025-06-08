@@ -1,8 +1,9 @@
 // Navigate to higher abstraction levels
 
 import { TechObject } from '../../domain/entities/TechObject';
-import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
-import { NavigationContext, StructuralData } from '../../domain/value-objects';
+// import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
+import { VerticalLevel } from '../../domain/value-objects';
+import { NavigationContext } from '../../domain/value-objects';
 import { AbstractionHierarchy } from '../../domain/aggregates/AbstractionHierarchy';
 import { NavigationService, ViewerService } from '../services';
 
@@ -14,7 +15,7 @@ export class AbstractUpUseCase {
 
   async execute(
     objectId: string,
-    currentLevel: AbstractionLevel,
+    currentLevel: VerticalLevel,
     hierarchy: AbstractionHierarchy
   ): Promise<AbstractUpResult> {
     // Navigate up the abstraction hierarchy
@@ -25,7 +26,7 @@ export class AbstractUpUseCase {
     );
 
     // Update viewer for the new abstraction level
-    const viewerResult = await this.viewerService.switchViewer(
+    const viewerResult = await this.viewerService.transformForViewer(
       navigationResult.objects,
       navigationResult.context.getCurrentViewer(),
       navigationResult.structure

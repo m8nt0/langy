@@ -1,0 +1,1 @@
+This folder should not know anything about the outside world — it just models your business reality.

@@ -73,9 +73,9 @@ export interface SearchPort {
   // Maintenance
   refresh(): Promise<void>;
   optimize(): Promise<void>;
-  getStats(): Promise<{
-    documents: number;
-    size: number;
-    lastUpdated: Date;
-  }>;
+  // getStats(): Promise<{
+  //   documents: number;
+  //   size: number;
+  //   lastUpdated: Date;
+  // }>;
 } 

@@ -1,12 +1,14 @@
-import { AbstractionLevel, TechObjectType } from '../entities/TechObject';
-import { AbstractionLevelData, StructuralData, NavigationContext } from '../value-objects';
+import { HorizontalLevel } from '../value-objects/HorizontalLevel';
+import { VerticalLevel } from '../../../VerticalLevel'
+
+import {NavigationContext } from '../value-objects';
 
 /**
- * Aggregate root for managing abstraction levels and their relationships
+ * Aggregate root for managing abstraction (Vertical) levels and Version (Horizontal) levels as well as their relationships
  */
 export class AbstractionHierarchy {
   constructor(
-    private readonly levels: Map<AbstractionLevel, AbstractionLevelData>,
+    private readonly levels: Map<VerticalLevel,HorizontalLevel>,
     private readonly structure: StructuralData,
     private readonly context: NavigationContext
   ) {
@@ -14,12 +16,8 @@ export class AbstractionHierarchy {
   }
 
   // Accessors
-  getLevels(): Map<AbstractionLevel, AbstractionLevelData> {
+  getLevels(): Map<VerticalLevel,HorizontalLevel> {
     return new Map(this.levels);
-  }
-
-  getStructure(): StructuralData {
-    return this.structure;
   }
 
   getContext(): NavigationContext {
@@ -27,30 +25,38 @@ export class AbstractionHierarchy {
   }
 
   // Level operations
-  getLevel(level: AbstractionLevel): AbstractionLevelData | undefined {
+  getVerticalLevel(level: HorizontalLevel): string {
     return this.levels.get(level);
   }
 
-  // Navigation operations
-  navigateToLevel(level: AbstractionLevel): AbstractionHierarchy {
-    const newContext = this.context.withState({ currentLevel: level });
+  getStructure(): AbstractionHierarchy {
+    return 
+  }
+
+  // getHorizontalLevel(level: HorizontalLevel): undefined{
+  //   return this.levels.get(level);
+  // }
+
+  // Navigation operations - Basically updating the navigationContext
+  navigateToLevel(level: VerticalLevel): AbstractionHierarchy {
+    const newContext = this.context.withState({ currentVerticalLevel: level });
     return new AbstractionHierarchy(this.levels, this.structure, newContext);
   }
 
   // Structural analysis
-  getObjectsAtLevel(level: AbstractionLevel): string[] {
+  getObjectsAtLevel(level: VerticalLevel): string[] {
     return this.structure.getNodesByLevel(level).map(node => node.id);
   }
 
-  getTransitions(fromLevel: AbstractionLevel): AbstractionTransition[] {
-    const levelData = this.levels.get(fromLevel);
-    return levelData ? levelData.getTransitions() : [];
-  }
+  // getTransitions(fromLevel: VerticalLevel): AbstractionTransition[] {
+  //   const levelData = this.levels.get(fromLevel);
+  //   return levelData ? levelData.getTransitions() : [];
+  // }
 
   // Relationship analysis
   getDependenciesBetweenLevels(
-    sourceLevel: AbstractionLevel,
-    targetLevel: AbstractionLevel
+    sourceLevel: Map<VerticalLevel, HorizontalLevel>,
+    targetLevel: Map<VerticalLevel, HorizontalLevel>
   ): LevelDependency[] {
     const sourceNodes = this.structure.getNodesByLevel(sourceLevel);
     const targetNodes = this.structure.getNodesByLevel(targetLevel);
@@ -78,43 +84,6 @@ export class AbstractionHierarchy {
     return dependencies;
   }
 
-  // Validation
-  validateTransition(
-    fromLevel: AbstractionLevel,
-    toLevel: AbstractionLevel,
-    objectId: string
-  ): ValidationResult {
-    const levelData = this.levels.get(fromLevel);
-    if (!levelData) {
-      return { valid: false, errors: ['Source level not found'] };
-    }
-
-    const transitions = levelData.getTransitions();
-    const validTransition = transitions.find(t => t.targetLevel === toLevel);
-    if (!validTransition) {
-      return { valid: false, errors: ['Invalid transition path'] };
-    }
-
-    const node = this.structure.findNode(objectId);
-    if (!node) {
-      return { valid: false, errors: ['Object not found'] };
-    }
-
-    // Validate against transition rules
-    const errors: string[] = [];
-    validTransition.validationRules.forEach(rule => {
-      // Here we would implement specific validation logic for each rule
-      // For now, we'll just check if the node meets basic requirements
-      if (!this.validateRule(rule, node)) {
-        errors.push(`Failed validation rule: ${rule}`);
-      }
-    });
-
-    return {
-      valid: errors.length === 0,
-      errors
-    };
-  }
 
   private validateRule(rule: string, node: any): boolean {
     // Implement specific validation logic here
@@ -147,7 +116,7 @@ export class AbstractionHierarchy {
 export interface LevelDependency {
   sourceId: string;
   sourceName: string;
-  sourceLevel: AbstractionLevel;
+  sourceLevel: Map<VerticalLevel,HorizontalLevel>;
   targetIds: string[];
   relationshipTypes: string[];
 }
@@ -158,7 +127,7 @@ export interface ValidationResult {
 }
 
 export interface AbstractionTransition {
-  targetLevel: AbstractionLevel;
+  targetLevel: Map<VerticalLevel,HorizontalLevel>;
   requirements: string[];
   validationRules: string[];
 } 

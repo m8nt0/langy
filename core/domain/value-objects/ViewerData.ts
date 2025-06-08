@@ -1,6 +1,15 @@
+import { TimelineViewerConfig } from './viewers/Timeline';
+import { AbstractionViewerConfig } from './viewers';
+import { ParadigmViewerConfig } from './viewers';
+import { SystemViewerConfig } from './viewers';
+import { UseCaseViewerConfig } from './viewers';
+import { ExperienceViewerConfig } from './viewers';
+
 /**
  * Represents different ways to view tech objects in the system
  */
+
+// Viewers are organizational lenses—they change how the cards are grouped/arranged, not the underlying data.
 
 export enum ViewerType {
     TIMELINE = 'TIMELINE',
@@ -9,22 +18,6 @@ export enum ViewerType {
     SYSTEM = 'SYSTEM',
     USE_CASES = 'USE_CASES',
     EXPERIENCE = 'EXPERIENCE'
-}
-
-export enum TimelineScale {
-    DAYS = 'DAYS',
-    WEEKS = 'WEEKS',
-    MONTHS = 'MONTHS',
-    QUARTERS = 'QUARTERS',
-    YEARS = 'YEARS'
-}
-
-export enum TreeDirection {
-    TOP_DOWN = 'TOP_DOWN',
-    BOTTOM_UP = 'BOTTOM_UP',
-    LEFT_RIGHT = 'LEFT_RIGHT',
-    RIGHT_LEFT = 'RIGHT_LEFT',
-    RADIAL = 'RADIAL'
 }
 
 export interface ViewerConfiguration {
@@ -36,50 +29,6 @@ export interface ViewerConfiguration {
     autoLayout: boolean;
     grouping?: string[];
     customFields?: string[];
-}
-
-export interface TimelineViewerConfig extends ViewerConfiguration {
-    scale: TimelineScale;
-    showMilestones: boolean;
-    showReleases: boolean;
-    showDependencies: boolean;
-    compareVersions: boolean;
-}
-
-export interface AbstractionTreeConfig extends ViewerConfiguration {
-    direction: TreeDirection;
-    maxDepth: number;
-    showInherited: boolean;
-    showImplemented: boolean;
-    collapseNodes: boolean;
-}
-
-export interface ParadigmViewerConfig extends ViewerConfiguration {
-    paradigms: string[];
-    showCrossParadigm: boolean;
-    groupByParadigm: boolean;
-    showParadigmRelations: boolean;
-}
-
-export interface SystemViewerConfig extends ViewerConfiguration {
-    systemLayers: string[];
-    showInteractions: boolean;
-    showDataFlow: boolean;
-    showControlFlow: boolean;
-}
-
-export interface UseCaseViewerConfig extends ViewerConfiguration {
-    domains: string[];
-    industries: string[];
-    showValueChains: boolean;
-    valueMetrics: string[];
-}
-
-export interface ExperienceViewerConfig extends ViewerConfiguration {
-    userTypes: string[];
-    showInteractions: boolean;
-    showUsagePatterns: boolean;
-    experienceMetrics: string[];
 }
 /**
  * Immutable value object representing viewer configuration and state
@@ -130,7 +79,7 @@ export class ViewerData {
         return new ViewerData(ViewerType.TIMELINE, config);
     }
 
-    static createAbstractionTreeViewer(config: AbstractionTreeConfig): ViewerData {
+    static createAbstractionTreeViewer(config: AbstractionViewerConfig): ViewerData {
         return new ViewerData(ViewerType.ABSTRACTION_TREE, config);
     }
 

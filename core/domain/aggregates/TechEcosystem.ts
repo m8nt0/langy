@@ -1,12 +1,12 @@
-import { TechObject, AbstractionLevel, TechObjectType } from '../entities/TechObject';
-import { Version } from '../entities/Version';
+import { TechObject} from '../entities/TechObject';
+import { VerticalLevel, HorizontalLevel } from '../value-objects';
+// import { TechObjectType } from '../../shared/constants/ObjectTypes';
+// import { Version } from '../entities/Version';
+
 import { 
   ViewerData, 
   FilterCriteria, 
-  Timeline, 
-  StructuralData,
-  NavigationContext,
-  TimelineEvent
+  NavigationContext
 } from '../value-objects';
 import { AbstractionHierarchy, ValidationResult } from './AbstractionHierarchy';
 
@@ -17,7 +17,6 @@ export class TechEcosystem {
   constructor(
     private readonly objects: Map<string, TechObject>,
     private readonly hierarchy: AbstractionHierarchy,
-    private readonly timeline: Timeline,
     private readonly viewer: ViewerData,
     private readonly filter: FilterCriteria
   ) {
@@ -46,10 +45,7 @@ export class TechEcosystem {
         type: object.getType(),
         level: object.getAbstractionLevel(),
         name: object.getName(),
-        metadata: {
-          complexity: object.getMetadata().complexity,
-          stability: object.getMetadata().stability
-        }
+
       }
     ]);
 
