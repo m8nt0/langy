@@ -1,7 +1,7 @@
 // Handles filtering logic
 
 import { TechObject } from '../../domain/entities/TechObject';
-import { FilterCriteria } from '../../domain/value-objects';
+import { FilterCriteria } from '../../..';
 import { TechObjectRepository, CachePort, SearchPort } from '../ports';
 import { 
   FilterGroup as IFilterGroup,

@@ -1,7 +1,7 @@
 // Data persistence interface
 
 import { TechObject } from '../../domain/entities/TechObject';
-import { FilterCriteria } from '../../domain/value-objects';
+import { FilterCriteria } from '../../..';
 import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
 import { TechObjectType } from '../../shared/constants/ObjectTypes';
 

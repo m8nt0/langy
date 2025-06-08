@@ -1,8 +1,8 @@
 // Handles abstraction level transitions
 
 import { TechObject } from '../../domain/entities/TechObject';
-import { NavigationContext, StructuralData } from '../../domain/value-objects';
-import { AbstractionHierarchy } from '../../domain/aggregates/AbstractionHierarchy';
+import { NavigationContext, StructuralData } from '../../..';
+import { AbstractionHierarchy } from '../../../aggregates/AbstractionHierarchy';
 import { TechObjectRepository, CachePort } from '../ports';
 import { NavigationState, NavigationPathEntry } from '../../shared/types/NavigationTypes';
 import { NavigationError, NavigationErrorCodes } from '../../shared/errors/NavigationError';

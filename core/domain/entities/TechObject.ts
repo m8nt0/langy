@@ -1,91 +1,107 @@
-import { VerticalLevel } from '../../../VerticalLevel';
-import { HorizontalLevel } from '../value-objects/HorizontalLevel';
-import { VisualizerApiPort } from '../../application/ports';
-import { ViewerData } from '../value-objects';
-// import { v4 as uuidv4 } from 'uuid';
 
-/**
- * TechObject represents one technology object version,
- * with vertical and horizontal levels defining its type and version level.
- * Supports parent-child relationship to form version hierarchy.
- */
+// src/core/domain/entities/TechObject.ts
+import { TechObjectId } from '../value-objects/TechObjectId';
+import { Version } from './Version';
+import { Relationship } from './Relationship';
+
+export interface TechObjectMetadata {
+  name: string;
+  description: string;
+  creator?: string;
+  website?: string;
+  repository?: string;
+  documentation?: string;
+  community: string[];
+  tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ContentSection {
+  narrative: {
+    history: string;
+    purpose: string;
+    designPhilosophy: string;
+    currentStatus: 'active' | 'deprecated' | 'experimental';
+  };
+  viewerData: {
+    timeline: any[];
+    abstraction: any[];
+    paradigm: any[];
+    system: any[];
+    useCase: any[];
+    experience: any[];
+  };
+  codeExamples: {
+    language: string;
+    examples: Array<{
+      title: string;
+      code: string;
+      description: string;
+    }>;
+  };
+}
 
 export class TechObject {
-  private readonly id: string;
-  private tags: { For: string[]; By: string[] };
-  private name: string;
-  // Not seen
-  private verticalLevel: VerticalLevel;
-  private horizontalLevel: HorizontalLevel;
-
-  private viewerData: ViewerData;
-  private visualizerAPI: VisualizerApiPort;
-  // Version hierarchy references
-  private parentId?: string;
-  private childrenIds: string[] = [];
-
   constructor(
-    id: string,
-    name: string,
-    verticalLevel: VerticalLevel,
-    horizontalLevel: HorizontalLevel,
-    tags: { For: string[]; By: string[] } = { For: [], By: [] },
-    parentId?: string,
+    public readonly id: TechObjectId,
+    public readonly name: string,
+    public readonly metadata: TechObjectMetadata,
+    public readonly level: number,
+    public readonly type: string,
+    public readonly versions: Version[] = [],
+    public readonly relationships: Relationship[] = [],
+    public readonly content: ContentSection
+  ) {}
 
-  ) {
-    this.id = id;
-    this.name = name;
-    this.verticalLevel = verticalLevel;
-    this.horizontalLevel = horizontalLevel;
-    this.tags = tags;
-    this.parentId = parentId;
+  addVersion(version: Version): TechObject {
+    return new TechObject(
+      this.id,
+      this.name,
+      this.metadata,
+      this.level,
+      this.type,
+      [...this.versions, version],
+      this.relationships,
+      this.content
+    );
   }
 
-  public getId(): string {
-    return this.id;
+  addRelationship(relationship: Relationship): TechObject {
+    return new TechObject(
+      this.id,
+      this.name,
+      this.metadata,
+      this.level,
+      this.type,
+      this.versions,
+      [...this.relationships, relationship],
+      this.content
+    );
   }
 
-  public getName(): string {
-    return this.name;
+  updateMetadata(metadata: Partial<TechObjectMetadata>): TechObject {
+    return new TechObject(
+      this.id,
+      this.name,
+      { ...this.metadata, ...metadata, updatedAt: new Date() },
+      this.level,
+      this.type,
+      this.versions,
+      this.relationships,
+      this.content
+    );
   }
 
-  public getTags(): { For: string[]; By: string[] } {
-    return this.tags;
+  getLatestVersion(): Version | null {
+    return this.versions.length > 0 
+      ? this.versions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0]
+      : null;
   }
 
-  public getVerticalLevel(): VerticalLevel {
-    return this.verticalLevel;
-  }
-
-  public getHorizontalLevel(): HorizontalLevel {
-    return this.horizontalLevel;
-  }
-
-  public getParentId(): string | undefined {
-    return this.parentId;
-  }
-
-  public getChildrenIds(): string[] {
-    return [...this.childrenIds];
-  }
-
-  // Add child version
-  public addChild(childId: string): void {
-    if (!this.childrenIds.includes(childId)) {
-      this.childrenIds.push(childId);
-    }
-  }
-
-  // Update fields selectively
-  public update(
-    name?: string,
-    verticalLevel?: VerticalLevel,
-    horizontalLevel?: HorizontalLevel,
-    tags?: { For: string[]; By: string[] }
-  ): void {
-    if (name) this.name = name;
-    if (verticalLevel) this.verticalLevel = verticalLevel;
-    if (horizontalLevel) this.horizontalLevel = horizontalLevel;
-    if (tags) this.tags = tags;
+  hasRelationshipWith(targetId: TechObjectId): boolean {
+    return this.relationships.some(rel => 
+      rel.sourceId.equals(targetId) || rel.targetId.equals(targetId)
+    );
   }
 }

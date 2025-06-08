@@ -1,7 +1,7 @@
 // Apply filter criteria
 
 import { TechObject } from '../../domain/entities/TechObject';
-import { FilterCriteria } from '../../domain/value-objects';
+import { FilterCriteria } from '../../..';
 import { FilterService } from '../services';
 
 export class ApplyFilterUseCase {

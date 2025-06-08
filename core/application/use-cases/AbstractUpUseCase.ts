@@ -2,9 +2,9 @@
 
 import { TechObject } from '../../domain/entities/TechObject';
 // import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
-import { VerticalLevel } from '../../domain/value-objects';
-import { NavigationContext } from '../../domain/value-objects';
-import { AbstractionHierarchy } from '../../domain/aggregates/AbstractionHierarchy';
+import { VerticalLevel } from '../../..';
+import { NavigationContext } from '../../..';
+import { AbstractionHierarchy } from '../../../aggregates/AbstractionHierarchy';
 import { NavigationService, ViewerService } from '../services';
 
 export class AbstractUpUseCase {
@@ -26,7 +26,7 @@ export class AbstractUpUseCase {
     );
 
     // Update viewer for the new abstraction level
-    const viewerResult = await this.viewerService.transformForViewer(
+    const viewerResult = await this.viewerService.switchViewer(
       navigationResult.objects,
       navigationResult.context.getCurrentViewer(),
       navigationResult.structure

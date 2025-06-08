@@ -1,7 +1,7 @@
 // Manages different visualization modes
 
 import { TechObject } from '../../domain/entities/TechObject';
-import { ViewerData } from '../../domain/value-objects';
+import { ViewerData } from '../../..';
 import { ExperienceViewerConfig, ParadigmViewerConfig, UseCaseViewerConfig, AbstractionViewerConfig, TimelineViewerConfig, SystemViewerConfig} from '../../../viewers'
 import { 
   VisualizerApiPort, 

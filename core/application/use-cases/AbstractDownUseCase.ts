@@ -2,8 +2,8 @@
 
 import { TechObject } from '../../domain/entities/TechObject';
 import { AbstractionLevel } from '../../shared/constants/AbstractionLevels';
-import { NavigationContext, StructuralData } from '../../domain/value-objects';
-import { AbstractionHierarchy } from '../../domain/aggregates/AbstractionHierarchy';
+import { NavigationContext, StructuralData } from '../../..';
+import { AbstractionHierarchy } from '../../../aggregates/AbstractionHierarchy';
 import { NavigationService, ViewerService } from '../services';
 
 export class AbstractDownUseCase {

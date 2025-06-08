@@ -1,7 +1,7 @@
 // Retrieve card information
 
 import { TechObject } from '../../domain/entities/TechObject';
-import { ViewerData } from '../../domain/value-objects';
+import { ViewerData } from '../../..';
 import { 
   ViewerService, 
   RelationshipService, 
