@@ -1,4 +1,6 @@
 // src/core/application/commands/ViewerCommands.ts
+// Interactions related to viewers.
+
 export interface CreateViewerCommand {
     name: string;
     type: ViewerType;

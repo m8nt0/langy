@@ -1,4 +1,6 @@
 // src/core/application/commands/TechObjectCommands.ts
+// Actions to create, update, delete tech objects. 
+
 export interface CreateTechObjectCommand {
     name: string;
     type: string;

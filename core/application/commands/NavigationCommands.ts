@@ -1,4 +1,6 @@
 // src/core/application/commands/NavigationCommands.ts
+// Write actions for navigation (e.g., move up/down)
+
 export interface NavigateToLevelCommand {
     levelId: string;
     techObjectId?: string;

@@ -1,1 +1,1 @@
-Revoultionary bi-dierctional recusive philopshically and scientifically sound learning platform of tech tools 
+Revoultionary bi-dierctional -- recusive philopshically and scientifically sound learning platform of tech tools 

@@ -1,0 +1,1 @@
+events	-  Notified when something happens in domain  -  TechObjectCreatedEvent, NavigationChanged
