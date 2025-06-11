@@ -2,7 +2,7 @@
 
 import { ComputeTask, ComputeResult } from './index';
 
-export class LocalComputerAdapter {
+export class LocalComputeAdapter {
     private workers: Worker[] = [];
     private taskQueue: ComputeTask[] = [];
     private maxWorkers: number;
