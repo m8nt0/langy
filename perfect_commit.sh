@@ -5,7 +5,7 @@
 # A Complete Philosophical, Scientific, and Engineering Approach to Git Commits
 # ============================================================================
 
-set -euo pipefail
+# set -euo pipefail
 
 # Configuration and Constants
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -42,16 +42,16 @@ readonly INFINITY="∞"
 
 # Ontological Categories (What exists in the codebase)
 declare -A ONTOLOGICAL_ENTITIES=(
-    ["architecture"]="System Architecture, Design Patterns, Infrastructure"
-    ["data"]="Data Models, Schemas, Structures, Flow"
-    ["behavior"]="Business Logic, Algorithms, Workflows"
-    ["interface"]="APIs, UI Components, Contracts"
-    ["security"]="Authentication, Authorization, Encryption"
-    ["performance"]="Optimization, Caching, Resource Management"
-    ["reliability"]="Error Handling, Testing, Monitoring"
-    ["documentation"]="Comments, READMEs, Specifications"
-    ["tooling"]="Build Systems, CI/CD, Development Tools"
-    ["environment"]="Configuration, Deployment, Infrastructure"
+  ["architecture"]="System Architecture, Design Patterns, Infrastructure"
+  ["data"]="Data Models, Schemas, Structures, Flow"
+  ["behavior"]="Business Logic, Algorithms, Workflows"
+  ["interface"]="APIs, UI Components, Contracts"
+  ["security"]="Authentication, Authorization, Encryption"
+  ["performance"]="Optimization, Caching, Resource Management"
+  ["reliability"]="Error Handling, Testing, Monitoring"
+  ["documentation"]="Comments, READMEs, Specifications"
+  ["tooling"]="Build Systems, CI/CD, Development Tools"
+  ["environment"]="Configuration, Deployment, Infrastructure"
 )
 
 # Epistemological Actions (How we know/learn/change)
@@ -167,7 +167,11 @@ elicit_ontological_understanding() {
     
     local i=1
     for entity in "${!ONTOLOGICAL_ENTITIES[@]}"; do
-        echo -e "${BLUE}$i) ${entity^}: ${ONTOLOGICAL_ENTITIES[$entity]}${NC}"
+        # echo -e "${BLUE}$i) ${entity^}: ${ONTOLOGICAL_ENTITIES[$entity]}${NC}"
+        # Capitalize the first letter manually
+        entity_capitalized=$(echo "${entity}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+        echo -e "${BLUE}$i) ${entity_capitalized}: ${ONTOLOGICAL_ENTITIES[$entity]}${NC}"
+
         ((i++))
     done
     echo ""
@@ -198,7 +202,9 @@ elicit_epistemological_understanding() {
     
     local i=1
     for action in "${!EPISTEMOLOGICAL_ACTIONS[@]}"; do
-        echo -e "${BLUE}$i) ${action^}: ${EPISTEMOLOGICAL_ACTIONS[$action]}${NC}"
+        # Capitalize the first letter manually
+        action_capitalized=$(echo "${action}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+        echo -e "${BLUE}$i) ${action_capitalized}: ${EPISTEMOLOGICAL_ACTIONS[$action]}${NC}"
         ((i++))
     done
     echo ""
@@ -229,7 +235,8 @@ elicit_teleological_understanding() {
     
     local i=1
     for value in "${!TELEOLOGICAL_VALUES[@]}"; do
-        echo -e "${BLUE}$i) ${value^}: ${TELEOLOGICAL_VALUES[$value]}${NC}"
+        value_capitalized=$(echo "${value}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+        echo -e "${BLUE}$i) ${value_capitalized}: ${TELEOLOGICAL_VALUES[$value]}${NC}"
         ((i++))
     done
     echo ""
@@ -260,7 +267,8 @@ elicit_complexity_and_impact() {
     echo "Complexity Levels:"
     local i=1
     for level in "${!COMPLEXITY_LEVELS[@]}"; do
-        echo -e "${BLUE}$i) ${level^}: ${COMPLEXITY_LEVELS[$level]}${NC}"
+        level_capitalized=$(echo "${level}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+        echo -e "${BLUE}$i) ${level_capitalized}: ${COMPLEXITY_LEVELS[$level]}${NC}"
         ((i++))
     done
     echo ""
@@ -282,7 +290,8 @@ elicit_complexity_and_impact() {
     echo "Impact Scopes:"
     i=1
     for scope in "${!IMPACT_SCOPES[@]}"; do
-        echo -e "${BLUE}$i) ${scope^}: ${IMPACT_SCOPES[$scope]}${NC}"
+        scope_capitalized=$(echo "${scope}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+        echo -e "${BLUE}$i) ${scope_capitalized}: ${IMPACT_SCOPES[$scope]}${NC}"
         ((i++))
     done
     echo ""
@@ -376,10 +385,14 @@ compose_revolutionary_commit() {
     local footer=""
     
     # Generate sophisticated subject line
-    subject_line="${SELECTED_ACTION^} ${SELECTED_ENTITY}: ${COMPONENT_NAME}"
+    
+    SELECTED_ACTION_cap=$(echo "${SELECTED_ACTION}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+    subject_line="${SELECTED_ACTION_cap} ${SELECTED_ENTITY}: ${COMPONENT_NAME}"
     
     # Add complexity and scope indicators
-    subject_line+=" [${SELECTED_COMPLEXITY^^}:${SELECTED_SCOPE^^}]"
+    SELECTED_COMPLEXITY_CAP=$(echo "${SELECTED_COMPLEXITY}" | tr 'a-z' 'A-Z')
+    SELECTED_SCOPE_CAP=$(echo "${SELECTED_SCOPE}" | tr 'a-z' 'A-Z')
+    subject_line+=" [${SELECTED_COMPLEXITY_CAP}:${SELECTED_SCOPE_CAP}]"
     
     # Ensure subject line length compliance
     if [[ ${#subject_line} -gt ${MAXIMUM_SUBJECT_LENGTH:-72} ]]; then
@@ -469,11 +482,18 @@ display_commit_preview() {
 
 display_analysis_summary() {
     echo -e "${PURPLE}📊 COMPREHENSIVE ANALYSIS SUMMARY:${NC}"
-    echo -e "${BLUE}Ontological Entity: ${SELECTED_ENTITY^}${NC}"
-    echo -e "${BLUE}Epistemological Action: ${SELECTED_ACTION^}${NC}"
-    echo -e "${BLUE}Teleological Value: ${SELECTED_VALUE^}${NC}"
-    echo -e "${BLUE}Complexity Level: ${SELECTED_COMPLEXITY^}${NC}"
-    echo -e "${BLUE}Impact Scope: ${SELECTED_SCOPE^}${NC}"
+
+    SELECTED_ENTITY_CAP=$(echo "${SELECTED_ENTITY}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+    SELECTED_ACTION_CAP=$(echo "${SELECTED_ACTION}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+    SELECTED_VALUE_CAP=$(echo "${SELECTED_VALUE}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+    SELECTED_COMPLEXITY_CAP=$(echo "${SELECTED_COMPLEXITY}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+    SELECTED_SCOPE_CAP=$(echo "${SELECTED_SCOPE}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+
+    echo -e "${BLUE}Ontological Entity: ${SELECTED_ENTITY_CAP}${NC}"
+    echo -e "${BLUE}Epistemological Action: ${SELECTED_ACTION_CAP}${NC}"
+    echo -e "${BLUE}Teleological Value: ${SELECTED_VALUE_CAP}${NC}"
+    echo -e "${BLUE}Complexity Level: ${SELECTED_COMPLEXITY_CAP}${NC}"
+    echo -e "${BLUE}Impact Scope: ${SELECTED_SCOPE_CAP}${NC}"
     echo ""
 }
 
@@ -650,17 +670,20 @@ export_knowledge_base() {
         echo ""
         echo "## Ontological Entities"
         for entity in "${!ONTOLOGICAL_ENTITIES[@]}"; do
-            echo "- **${entity^}**: ${ONTOLOGICAL_ENTITIES[$entity]}"
+            entity_CAP=$(echo "${entity}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+            echo "- **${entity_CAP}**: ${ONTOLOGICAL_ENTITIES[$entity]}"
         done
         echo ""
         echo "## Epistemological Actions"
         for action in "${!EPISTEMOLOGICAL_ACTIONS[@]}"; do
-            echo "- **${action^}**: ${EPISTEMOLOGICAL_ACTIONS[$action]}"
+            action_CAP=$(echo "${action}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+            echo "- **${action_CAP}**: ${EPISTEMOLOGICAL_ACTIONS[$action]}"
         done
         echo ""
         echo "## Teleological Values"
         for value in "${!TELEOLOGICAL_VALUES[@]}"; do
-            echo "- **${value^}**: ${TELEOLOGICAL_VALUES[$value]}"
+            value_CAP=$(echo "${value}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+            echo "- **${value_CAP}**: ${TELEOLOGICAL_VALUES[$value]}"
         done
     } > "$export_file"
     

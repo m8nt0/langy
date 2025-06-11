@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 
+// TODO: need to use this as interface for implementation accross the different storage types
 export interface StorageAdapter {
     store(key: string, data: Buffer | string): Promise<string>;
     retrieve(key: string): Promise<Buffer>;
