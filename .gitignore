@@ -9,6 +9,10 @@
 .env.production
 
 .thoughts.md
+/thoughts.md
+/*/thoughts.md
+*/thoughts.md
+
 .thoughts.txt
 .perfect_commit.sh
 /perfect_commit.sh
