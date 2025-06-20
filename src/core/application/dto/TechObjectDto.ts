@@ -1,64 +1,29 @@
-export interface TechObjectDto {
-    id: string;
+import {
+    TechObjectId,
+    VersionNumber,
+    CompleteViewerData,
+  } from '../../domain/value-objects';
+  
+  export interface TechObjectMetadataDto {
     name: string;
-    type: string;
+    description: string;
+    official_doc: string;
+  }
+  
+  export interface VersionDto {
+    id: TechObjectId;
+    version: VersionNumber;
+    // metadata: TechObjectMetadataDto;
+    children: VersionDto[];
+    viewersData: CompleteViewerData
+  }
+  
+  export interface TechObjectDto {
+    id: string;
+    name:string;
     level: number;
     versions: VersionDto[];
-    metadata: TechObjectMetadataDto;
-    relationships: RelationshipDto[];
-    content: ContentSectionsDto;
-}
-
-export interface VersionDto {
-    major: number;
-    minor: number;
-    patch: number;
-    releaseDate: string;
-    status: 'active' | 'deprecated' | 'beta';
-}
-
-export interface TechObjectMetadataDto {
-    creator: string;
-    website: string;
-    repository: string;
-    license: string;
-    tags: string[];
-    description: string;
-}
-
-export interface RelationshipDto {
-    targetId: string;
-    type: 'depends_on' | 'used_by' | 'extends' | 'implements';
-    strength: number;
-}
-
-export interface ContentSectionsDto {
-    narrative: NarrativeDto;
-    viewerData: ViewerDataDto;
-    codeExamples: CodeExampleDto[];
-}
-
-export interface NarrativeDto {
-    history: string;
-    purpose: string;
-    designPhilosophy: string;
-    currentStatus: string;
-    community: string;
-}
-
-export interface ViewerDataDto {
-    timeline: any[];
-    abstraction: any[];
-    paradigm: any[];
-    system: any[];
-    useCase: any[];
-    experience: any[];
-}
-
-export interface CodeExampleDto {
-    id: string;
-    title: string;
-    code: string;
-    language: string;
-    description: string;
-}
+    // This is the critical change to align with your architecture
+    viewersData: CompleteViewerData;
+    // metadata: TechObjectMetadataDto;
+  }

@@ -1,42 +1,56 @@
-// src/core/application/use-cases/tech-objects/CreateTechObjectUseCase.ts
-import { ITechObjectRepository } from "../../../domain/repositories";
-import { TechObjectDto } from "../../dto/TechObjectDto";
-import { TechObject } from "../../../domain/entities";
+import { ITechObjectRepository } from '../../ports/outbound';
+import { TechObject } from '../../../domain/entities';
+import { TechObjectDto, VersionDto } from '../../dto';
+import {
+  AbstractionLevel,
+  CompleteViewerData,
+  TechObjectId,
+  VersionNumber,
+} from '../../../domain/value-objects';
+import { TechVersion } from '../../../domain/entities/TechObject';
 
 export class CreateTechObjectUseCase {
-    constructor(private techObjectRepo: ITechObjectRepository) {}
-  
-    async execute(dto: Omit<TechObjectDto, 'id'>): Promise<TechObjectDto> {
-      const techObject = new TechObject({
-        name: dto.name,
-        type: dto.type,
-        level: new AbstractionLevel(dto.level),
-        versions: dto.versions.map(v => new Version(v.major, v.minor, v.patch, new Date(v.releaseDate), v.status)),
-        metadata: dto.metadata,
-        relationships: dto.relationships,
-        content: dto.content
-      });
-  
-      const saved = await this.techObjectRepo.save(techObject);
-      return this.mapToDto(saved);
-    }
-  
-    private mapToDto(techObject: any): TechObjectDto {
-      return {
-        id: techObject.id.value,
-        name: techObject.name,
-        type: techObject.type,
-        level: techObject.level.value,
-        versions: techObject.versions.map(v => ({
-          major: v.major,
-          minor: v.minor,
-          patch: v.patch,
-          releaseDate: v.releaseDate.toISOString(),
-          status: v.status
-        })),
-        metadata: techObject.metadata,
-        relationships: techObject.relationships,
-        content: techObject.content
-      };
-    }
+  constructor(private readonly techObjectRepo: ITechObjectRepository) {}
+
+  async execute(dto: Omit<TechObjectDto, 'id'>): Promise<TechObjectDto> {
+    const techObject = new TechObject(
+      TechObjectId.generate(), // Generate new ID
+      dto.name,
+      new AbstractionLevel(dto.level),
+      this.mapVersionsFromDto(dto.versions),
+      dto.viewersData as CompleteViewerData, // Directly use the rich viewersData
+    );
+
+    const saved = await this.techObjectRepo.save(techObject);
+    return this.mapToDto(saved);
   }
+
+  private mapVersionsFromDto(versionDtos: VersionDto[]): TechVersion[] {
+      return versionDtos.map(dto => new TechVersion(
+          dto.id,
+          new VersionNumber(dto.version.major, dto.version.minor, dto.version.patch),
+          dto.metadata,
+          this.mapVersionsFromDto(dto.children) // Recursively map children
+      ));
+  }
+
+  private mapToDto(techObject: TechObject): TechObjectDto {
+    return {
+      id: techObject.id.toString(),
+      name: techObject.name,
+      level: techObject.level.toNumber(),
+      versions: techObject.versions.map((v) => this.mapVersionToDto(v)),
+      viewersData: techObject.viewersData,
+      metadata: techObject.metadata,
+    };
+  }
+
+  private mapVersionToDto(version: TechVersion): VersionDto {
+      return {
+          id: version.id,
+          version: version.version,
+          metadata: version.metadata,
+          children: version.children.map(child => this.mapVersionToDto(child))
+      };
+  }
+}

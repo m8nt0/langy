@@ -1,37 +1,39 @@
-// src/core/application/use-cases/navigation/AbstractDownUseCase.ts
-
-import { NavigationService } from '../../../domain/services/NavigationService';
-import { NavigationDto } from '../../dto/NavigationDto';
+import { ITechObjectRepository } from '../../ports/outbound';
+import { TechObjectDto, VersionDto } from '../../dto';
+import { AbstractDownCommand } from '../../commands/NavigationCommands';
+import { TechObjectId } from '../../../domain/value-objects';
+import { TechObject, TechVersion } from '../../../domain/entities';
 
 export class AbstractDownUseCase {
-    constructor(private navigationService: NavigationService) {}
-  
-    async execute(request: AbstractDownRequest): Promise<NavigationDto> {
-      const result = await this.navigationService.abstractDown(
-        request.currentObjectIds,
-        request.targetLevel
-      );
-  
-      return {
-        currentPath: {
-          levels: result.levels.map(l => ({
-            id: l.id,
-            name: l.name,
-            level: l.level,
-            techObjects: l.techObjectIds
-          })),
-          position: {
-            levelId: result.currentLevel.id,
-            techObjectId: result.currentTechObject?.id
-          }
-        },
-        availableActions: result.availableActions,
-        breadcrumb: result.breadcrumb
-      };
+  constructor(private readonly techObjectRepo: ITechObjectRepository) {}
+
+  async execute(command: AbstractDownCommand): Promise<TechObjectDto> {
+    const targetId = new TechObjectId(command.targetTechObjectId);
+    const techObject = await this.techObjectRepo.findById(targetId);
+
+    if (!techObject) {
+      throw new Error('Target TechObject not found for AbstractDown.');
     }
+
+    return this.mapToDto(techObject);
   }
-  
-  export interface AbstractDownRequest {
-    currentObjectIds: string[];
-    targetLevel: number;
+
+  private mapToDto(techObject: TechObject): TechObjectDto {
+    // This mapping logic should be centralized if used in multiple places
+    return {
+      id: techObject.id.toString(),
+      name: techObject.name,
+      level: techObject.level.toNumber(),
+      versions: techObject.versions.map((v) => this.mapVersionToDto(v)),
+      viewersData: techObject.viewersData
+    };
   }
+
+  private mapVersionToDto(version: TechVersion): VersionDto {
+    return {
+        id: version.id,
+        version: version.version,
+        children: version.children.map(child => this.mapVersionToDto(child))
+    };
+  }
+}

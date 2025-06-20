@@ -1,6 +1,7 @@
 // src/core/domain/value-objects/TechObjectId.ts
 export class TechObjectId {
-  private constructor(readonly value: string) {
+  // It was Private before but I have made it Public
+  constructor(readonly value: string) {
     if (!value || value.trim().length === 0) {
       throw new Error('TechObjectId cannot be empty');
     }

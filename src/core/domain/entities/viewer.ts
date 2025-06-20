@@ -1,6 +1,10 @@
+// 3. Viewer - Different ways to see tech objects
 import { ViewerType } from "../value-objects/Viewer";
 import { TechObject } from "./TechObject";
-// 3. Viewer - Different ways to see tech objects
+
+// But I'm not sure if its needed
+// import { ViewerId } from '../value-objects/ID';
+
 export class Viewer {
     constructor(
         public readonly type: ViewerType, // timeline, abstraction, etc.

@@ -1,84 +1,32 @@
-// src/core/domain/services/NavigationService.ts
-
-import { NavigationPath, PathSegment } from '../value-objects/NavigationPath';
-import { AbstractionLevel } from '../value-objects/AbstractionLevel';
-import { TechObjectId } from '../value-objects/TechObjectId';
-import { VersionNumber } from '../value-objects/VersionNumber';
+import { NavigationPath } from '../value-objects/NavigationPath';
+import { TechObject } from '../entities/TechObject';
+import { ITechObjectRepository } from '../../application/ports/outbound';
+import { TechObjectId } from '../value-objects';
 
 export class NavigationService {
-    private currentPath: NavigationPath = NavigationPath.create();
-    private history: NavigationPath[] = [];
-    private forwardStack: NavigationPath[] = [];
+  private currentPath: NavigationPath;
 
-    getCurrentPath(): NavigationPath {
-        return this.currentPath;
-    }
+  constructor(private readonly techObjectRepo: ITechObjectRepository) {
+    this.currentPath = NavigationPath.empty();
+  }
 
-    navigateToLevel(level: AbstractionLevel): NavigationPath {
-        this.addToHistory();
-        this.clearForwardStack();
-        this.currentPath = this.currentPath.navigateToLevel(level);
-        return this.currentPath;
+  public async navigateTo(techObjectId: TechObjectId): Promise<void> {
+    const techObject = await this.techObjectRepo.findById(techObjectId);
+    if (!techObject) {
+      throw new Error('Cannot navigate to a non-existent TechObject.');
     }
+    this.currentPath = this.currentPath.add(techObject);
+  }
 
-    navigateToTechObject(level: AbstractionLevel, techObjectId: TechObjectId): NavigationPath {
-        this.addToHistory();
-        this.clearForwardStack();
-        this.currentPath = this.currentPath.navigateToTechObject(level, techObjectId);
-        return this.currentPath;
-    }
+  public navigateBackTo(nodeIndex: number): void {
+    this.currentPath = this.currentPath.slice(nodeIndex);
+  }
+  
+  public getCurrentPath(): NavigationPath {
+    return this.currentPath;
+  }
 
-    navigateToVersion(level: AbstractionLevel, techObjectId: TechObjectId, version: VersionNumber): NavigationPath {
-        this.addToHistory();
-        this.clearForwardStack();
-        this.currentPath = this.currentPath.navigateToVersion(level, techObjectId, version);
-        return this.currentPath;
-    }
-
-    goBack(): NavigationPath {
-        if (this.history.length > 0) {
-            this.forwardStack.push(this.currentPath);
-            this.currentPath = this.history.pop()!;
-        }
-        return this.currentPath;
-    }
-
-    goForward(): NavigationPath {
-        if (this.forwardStack.length > 0) {
-            this.addToHistory();
-            this.currentPath = this.forwardStack.pop()!;
-        }
-        return this.currentPath;
-    }
-
-    canGoBack(): boolean {
-        return this.history.length > 0;
-    }
-
-    canGoForward(): boolean {
-        return this.forwardStack.length > 0;
-    }
-
-    reset(): NavigationPath {
-        this.currentPath = NavigationPath.create();
-        this.history = [];
-        this.forwardStack = [];
-        return this.currentPath;
-    }
-
-    getBreadcrumb(): string {
-        return this.currentPath.getBreadcrumb();
-    }
-
-    private addToHistory(): void {
-        this.history.push(this.currentPath);
-        // Limit history size
-        if (this.history.length > 50) {
-            this.history.shift();
-        }
-    }
-
-    private clearForwardStack(): void {
-        this.forwardStack = [];
-    }
+  public clear(): void {
+    this.currentPath = NavigationPath.empty();
+  }
 }

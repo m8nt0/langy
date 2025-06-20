@@ -1,24 +1,35 @@
-// src/core/application/commands/NavigationCommands.ts
-// Write actions for navigation (e.g., move up/down)
-
-export interface NavigateToLevelCommand {
-    levelId: string;
-    techObjectId?: string;
-}
-
-export interface AbstractUpCommand {
-    currentObjectIds: string[];
-    targetLevel: number;
-    relationships: Array<{ objectId: string; type: 'FOR' | 'BY' }>;
-    operation: 'OR' | 'AND';
-}
-
-export interface AbstractDownCommand {
-    currentObjectIds: string[];
-    targetLevel: number;
-}
-
-export interface NavigateHorizontalCommand {
-    techObjectId: string;
-    targetVersion: { major: number; minor: number; patch?: number };
-}
+import {
+    ExperienceRelationType,
+    ParadigmRelationType,
+    StructureRelationType,
+    SystemRelationType,
+    TemporalRelationType,
+    UseCaseRelationType,
+  } from '../../domain/value-objects/relationships';
+  
+  // A single filter criterion based on one of the six viewers
+  export type AbstractionFilter =
+    | { viewer: 'experience'; type: ExperienceRelationType }
+    | { viewer: 'paradigm'; type: ParadigmRelationType }
+    | { viewer: 'structure'; type: StructureRelationType }
+    | { viewer: 'system'; type: SystemRelationType }
+    | { viewer: 'temporal'; type: TemporalRelationType }
+    | { viewer: 'useCase'; type: UseCaseRelationType };
+  
+  export interface AbstractUpCommand {
+    currentTechObjectId: string;
+    // An array of filters to apply
+    filters: AbstractionFilter[];
+    // The logic to combine the filters
+    combinationLogic: 'AND' | 'OR';
+  }
+  
+  export interface AbstractDownCommand {
+    currentTechObjectId: string;
+    targetTechObjectId: string;
+  }
+  
+  export interface NavigateHorizontalCommand {
+    currentTechObjectId: string;
+    targetVersion: string;
+  }

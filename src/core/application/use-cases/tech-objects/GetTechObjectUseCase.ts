@@ -1,44 +1,38 @@
-// src/core/application/use-cases/tech-objects/GetTechObjectUseCase.ts
-import { ITechObjectRepository } from '../../../domain/repositories/ITechObjectRepository';
-import { TechObjectDto } from '../../dto/TechObjectDto';
+import { ITechObjectRepository } from '../../ports/outbound/ITechObjectRepository';
+import { TechObjectDto, VersionDto } from '../../dto/TechObjectDto';
+import { TechObjectId } from '../../../domain/value-objects';
+import { TechObject, TechVersion } from '../../../domain/entities';
 
 export class GetTechObjectUseCase {
-    constructor(private techObjectRepo: ITechObjectRepository) { }
+  constructor(private readonly techObjectRepo: ITechObjectRepository) {}
 
-    async execute(id: string): Promise<TechObjectDto> {
-        const techObject = await this.techObjectRepo.findById(id);
-        if (!techObject) throw new Error('TechObject not found');
-
-        return {
-            id: techObject.id.value,
-            name: techObject.name,
-            type: techObject.type,
-            level: techObject.level.value,
-            versions: techObject.versions.map(v => ({
-                major: v.major,
-                minor: v.minor,
-                patch: v.patch,
-                releaseDate: v.releaseDate.toISOString(),
-                status: v.status
-            })),
-            metadata: {
-                creator: techObject.metadata.creator,
-                website: techObject.metadata.website,
-                repository: techObject.metadata.repository,
-                license: techObject.metadata.license,
-                tags: techObject.metadata.tags,
-                description: techObject.metadata.description
-            },
-            relationships: techObject.relationships.map(r => ({
-                targetId: r.targetId,
-                type: r.type,
-                strength: r.strength
-            })),
-            content: {
-                narrative: techObject.content.narrative,
-                viewerData: techObject.content.viewerData,
-                codeExamples: techObject.content.codeExamples
-            }
-        };
+  async execute(id: string): Promise<TechObjectDto> {
+    const techObjectId = new TechObjectId(id);
+    const techObject = await this.techObjectRepo.findById(techObjectId);
+    if (!techObject) {
+      throw new Error('TechObject not found');
     }
+
+    return this.mapToDto(techObject);
+  }
+
+  private mapToDto(techObject: TechObject): TechObjectDto {
+    return {
+      id: techObject.id.toString(),
+      name: techObject.name,
+      level: techObject.level.toNumber(),
+      versions: techObject.versions.map((v) => this.mapVersionToDto(v)),
+      viewersData: techObject.viewersData,
+      metadata: techObject.metadata,
+    };
+  }
+
+  private mapVersionToDto(version: TechVersion): VersionDto {
+    return {
+        id: version.id,
+        version: version.version,
+        metadata: version.metadata,
+        children: version.children.map(child => this.mapVersionToDto(child))
+    };
+  }
 }

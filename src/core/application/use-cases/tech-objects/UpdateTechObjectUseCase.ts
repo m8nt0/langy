@@ -1,34 +1,43 @@
-// src/core/application/use-cases/tech-objects/UpdateTechObjectUseCase.ts
+import { ITechObjectRepository } from '../../ports/outbound';
+import { TechObject } from '../../../domain/entities';
+import { TechObjectDto, VersionDto } from '../../dto';
+import { TechObjectId } from '../../../domain/value-objects';
 
 export class UpdateTechObjectUseCase {
-    constructor(private techObjectRepo: ITechObjectRepository) {}
-  
-    async execute(id: string, updates: Partial<TechObjectDto>): Promise<TechObjectDto> {
-      const existing = await this.techObjectRepo.findById(id);
-      if (!existing) throw new Error('TechObject not found');
-  
-      const updated = existing.update(updates);
-      const saved = await this.techObjectRepo.save(updated);
-      
-      return this.mapToDto(saved);
+  constructor(private readonly techObjectRepo: ITechObjectRepository) {}
+
+  async execute(id: string, updates: Partial<Omit<TechObjectDto, 'id'>>): Promise<TechObjectDto> {
+    const techObjectId = new TechObjectId(id);
+    const existing = await this.techObjectRepo.findById(techObjectId);
+    if (!existing) {
+      throw new Error('TechObject not found');
     }
-  
-    private mapToDto(techObject: any): TechObjectDto {
-      return {
-        id: techObject.id.value,
-        name: techObject.name,
-        type: techObject.type,
-        level: techObject.level.value,
-        versions: techObject.versions.map(v => ({
-          major: v.major,
-          minor: v.minor,
-          patch: v.patch,
-          releaseDate: v.releaseDate.toISOString(),
-          status: v.status
-        })),
-        metadata: techObject.metadata,
-        relationships: techObject.relationships,
-        content: techObject.content
-      };
-    }
+
+    // This logic should be expanded in the entity to handle partial updates
+    const updatedObject = existing.update(updates); 
+
+    const saved = await this.techObjectRepo.save(updatedObject);
+    return this.mapToDto(saved);
   }
+
+  private mapToDto(techObject: TechObject): TechObjectDto {
+    return {
+      id: techObject.id.toString(),
+      name: techObject.name,
+      level: techObject.level.toNumber(),
+      versions: techObject.versions.map((v) => this.mapVersionToDto(v)),
+      viewersData: techObject.viewersData,
+      metadata: techObject.metadata,
+    };
+  }
+
+  private mapVersionToDto(version: any): VersionDto {
+    // Mapping logic from domain Version to VersionDto
+    return {
+        id: version.id,
+        version: version.version,
+        metadata: version.metadata,
+        children: version.children.map(child => this.mapVersionToDto(child))
+    };
+  }
+}

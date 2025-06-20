@@ -1,7 +1,7 @@
 // src/core/domain/repositories/ILevelRepository.ts
-import { Level } from '../entities/Level';
-import { AbstractionLevel } from '../value-objects/AbstractionLevel';
-import { TechObjectId } from '../value-objects/TechObjectId';
+import { Level } from '../../../../domain/entities/Level';
+import { AbstractionLevel } from '../../../../domain/value-objects/AbstractionLevel';
+import { TechObjectId } from '../../../../domain/value-objects/TechObjectId';
 
 export interface ILevelRepository {
   findByLevel(level: AbstractionLevel): Promise<Level | null>;

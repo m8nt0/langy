@@ -1,22 +1,28 @@
-// src/core/application/use-cases/viewers/UseCaseViewerUseCase.ts
+import { ITechObjectRepository } from '../../ports/outbound';
+import { FilterService } from '../../../domain/services';
+import { TechObjectFilter, TechObjectId, UseCaseViewerData } from '../../../domain/value-objects';
+import { TechObject } from '../../../domain/entities';
+
+export interface GetUseCaseViewCommand {
+  techObjectIds: string[];
+  filter?: TechObjectFilter;
+}
+
 export class UseCaseViewerUseCase {
-    constructor(private viewerService: ViewerService) { }
+  private readonly filterService: FilterService;
 
-    async execute(techObjectIds: string[], filters: FilterDto[] = []): Promise<ViewerDto> {
-        const useCaseData = await this.viewerService.generateUseCaseView(techObjectIds);
+  constructor(private readonly techObjectRepo: ITechObjectRepository) {
+    this.filterService = new FilterService();
+  }
 
-        return {
-            id: 'usecase-' + Date.now(),
-            name: 'Use Case Viewer',
-            type: 'usecase',
-            data: useCaseData,
-            filters,
-            configuration: {
-                showFilters: true,
-                sortBy: 'popularity',
-                groupBy: 'category',
-                visualization: 'grid'
-            }
-        };
+  async execute(command: GetUseCaseViewCommand): Promise<UseCaseViewerData[]> {
+    const techObjectIds = command.techObjectIds.map(id => new TechObjectId(id));
+    let techObjects = await this.techObjectRepo.findByIds(techObjectIds);
+
+    if (command.filter) {
+      techObjects = this.filterService.applyFilter(techObjects, command.filter);
     }
+
+    return techObjects.map(obj => obj.viewersData.usecase);
+  }
 }

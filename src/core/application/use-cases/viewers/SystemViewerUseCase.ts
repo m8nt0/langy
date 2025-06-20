@@ -1,21 +1,28 @@
-// src/core/application/use-cases/viewers/SystemViewerUseCase.ts
+import { ITechObjectRepository } from '../../ports/outbound';
+import { FilterService } from '../../../domain/services';
+import { TechObjectFilter, TechObjectId, SystemViewerData } from '../../../domain/value-objects';
+import { TechObject } from '../../../domain/entities';
+
+export interface GetSystemViewCommand {
+  techObjectIds: string[];
+  filter?: TechObjectFilter;
+}
+
 export class SystemViewerUseCase {
-    constructor(private viewerService: ViewerService) { }
+  private readonly filterService: FilterService;
 
-    async execute(techObjectIds: string[], filters: FilterDto[] = []): Promise<ViewerDto> {
-        const systemData = await this.viewerService.generateSystemView(techObjectIds);
+  constructor(private readonly techObjectRepo: ITechObjectRepository) {
+    this.filterService = new FilterService();
+  }
 
-        return {
-            id: 'system-' + Date.now(),
-            name: 'System Viewer',
-            type: 'system',
-            data: systemData,
-            filters,
-            configuration: {
-                showFilters: true,
-                sortBy: 'performance',
-                visualization: 'list'
-            }
-        };
+  async execute(command: GetSystemViewCommand): Promise<SystemViewerData[]> {
+    const techObjectIds = command.techObjectIds.map(id => new TechObjectId(id));
+    let techObjects = await this.techObjectRepo.findByIds(techObjectIds);
+
+    if (command.filter) {
+      techObjects = this.filterService.applyFilter(techObjects, command.filter);
     }
+
+    return techObjects.map(obj => obj.viewersData.system);
+  }
 }

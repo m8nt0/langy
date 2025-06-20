@@ -1,51 +1,54 @@
-// src/core/application/use-cases/navigation/AbstractUpUseCase.ts
-import { AbstractionService } from '../../../domain/services/AbstractionService';
-// import { NavigationService } from '../../../domain/services/NavigationService';
-import { ITechObjectRepository } from '../../../domain/repositories';
+import { ITechObjectRepository } from '../../ports/outbound';
+import { AbstractionService } from '../../../domain/services';
 import { AbstractUpCommand } from '../../commands/NavigationCommands';
-import { NavigationDto } from '../../dto/NavigationDto'
+import { TechObjectDto, VersionDto } from '../../dto';
+import { TechObject, TechVersion } from '../../../domain/entities';
+import { TechObjectId } from '../../../domain/value-objects';
 
 export class AbstractUpUseCase {
-  constructor(
-    private abstractionService: AbstractionService,
-    // private navigationService: NavigationService
-    private techObjectRepo: ITechObjectRepository
-  ) {}
+  private readonly abstractionService: AbstractionService;
 
-  async execute(request: AbstractUpCommand): Promise<NavigationDto> {
-    const { currentObjectIds, targetLevel, relationships, operation } = request;
-    
-    const result = await this.abstractionService.abstractUp(
-      currentObjectIds,
-      targetLevel,
-      relationships,
-      operation
+  constructor(private readonly techObjectRepository: ITechObjectRepository) {
+    this.abstractionService = new AbstractionService(techObjectRepository);
+  }
+
+  async execute(command: AbstractUpCommand): Promise<TechObjectDto[]> {
+    const currentTechObjectId = new TechObjectId(command.currentTechObjectId);
+    const currentTechObject = await this.techObjectRepository.findById(
+      currentTechObjectId,
     );
 
+    if (!currentTechObject) {
+      throw new Error('Current TechObject not found');
+    }
+
+    const abstractedObjects = await this.abstractionService.abstractUp(
+      currentTechObject,
+      command.filters,
+      command.combinationLogic,
+    );
+
+    return abstractedObjects.map((techObject) => this.mapToDto(techObject));
+  }
+
+  private mapToDto(techObject: TechObject): TechObjectDto {
     return {
-      currentPath: {
-        levels: result.levels.map(l => ({
-          id: l.id,
-          name: l.name,
-          level: l.level,
-          techObjects: l.techObjectIds
-        })),
-        position: {
-          // Id for each of the level
-          // TODO: only have one, levelId becuase at each level there could only be on type of techobjects at given level
-          levelId: result.currentLevel.id,
-          techObjectId: result.currentTechObject?.id
-        }
-      },
-      availableActions: result.availableActions,
-      breadcrumb: result.breadcrumb
+      id: techObject.id.toString(),
+      name: techObject.name,
+      level: techObject.level.toNumber(),
+      versions: techObject.versions.map((v) => this.mapVersionToDto(v)),
+      // The full, rich viewer data is passed directly to the DTO
+      viewersData: techObject.viewersData,
+      metadata: techObject.metadata,
+    };
+  }
+
+  private mapVersionToDto(version: TechVersion): VersionDto {
+    return {
+      id: version.id,
+      version: version.version,
+      metadata: version.metadata,
+      children: version.children.map((v) => this.mapVersionToDto(v)),
     };
   }
 }
-
-// export interface AbstractUpRequest {
-//   currentObjectIds: string[];
-//   targetLevel: number;
-//   relationships: Array<{ objectId: string; type: 'FOR' | 'BY' }>;
-//   operation: 'OR' | 'AND';
-// }
