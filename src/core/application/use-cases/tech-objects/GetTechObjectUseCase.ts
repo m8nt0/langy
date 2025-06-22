@@ -3,6 +3,8 @@ import { TechObjectDto, VersionDto } from '../../dto/TechObjectDto';
 import { TechObjectId } from '../../../domain/value-objects';
 import { TechObject, TechVersion } from '../../../domain/entities';
 
+// import { PostgreSQLAdapter } from '../../../../adapters/persistence/relational/PostgreSQLAdapter';
+
 export class GetTechObjectUseCase {
   constructor(private readonly techObjectRepo: ITechObjectRepository) {}
 
