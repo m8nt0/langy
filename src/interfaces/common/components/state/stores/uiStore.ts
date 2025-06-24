@@ -1,4 +1,4 @@
-import { createStore } from '../utils/createStore';
+import { createStore } from '../../utils/createStore';
 
 export type ViewerMode = 'default' | 'temporal' | 'structure' | 'paradigm' | 'system' | 'useCase' | 'experience';
 

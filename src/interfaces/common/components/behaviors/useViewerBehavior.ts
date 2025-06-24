@@ -1,4 +1,5 @@
-import { techObjectStore, techObjectSelectors } from '../state'; // Assuming state management
+import { techObjectSelectors } from '../state/selectors'; 
+import { techObjectStore } from '../state/stores';// Assuming state management
 
 /**
  * Encapsulates the logic for any of the main viewers.

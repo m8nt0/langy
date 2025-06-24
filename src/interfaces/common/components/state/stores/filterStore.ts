@@ -1,5 +1,5 @@
 import { TechObjectFilter } from '../../../../../core/domain/value-objects';
-import { createStore } from '../utils/createStore';
+import { createStore } from '../../utils/createStore';
 
 interface FilterState {
     activeFilter: TechObjectFilter;

@@ -1,9 +1,9 @@
 import { navigationStore, uiStore } from '../stores';
-import {
-    // Assume use cases are initialized elsewhere
-    getNavigationPathUseCase,
-    abstractUpUseCase,
-} from '../services/useCaseProvider'; // A hypothetical provider for use cases
+// import {
+//     // Assume use cases are initialized elsewhere
+//     getNavigationPathUseCase,
+//     abstractUpUseCase,
+// } from '../services/useCaseProvider'; // A hypothetical provider for use cases
 
 import {
     GetNavigationPathUseCase,

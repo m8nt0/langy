@@ -1,7 +1,7 @@
 import { techObjectStore, filterStore, uiStore, ViewerMode } from '../stores';
 import { FilterService } from '../../../../../core/domain/services/FilterService';
 import { TechObjectDto } from '../../../../../core/application/dto';
-import { createSelector } from '../utils/createSelector'; // A simple memoization utility
+import { createSelector } from '../../utils/createSelector'; // A simple memoization utility
 
 const filterService = new FilterService();
 

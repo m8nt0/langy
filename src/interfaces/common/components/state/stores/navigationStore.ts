@@ -1,5 +1,5 @@
 import { NavigationPath, NavigationNode } from '../../../../../core/domain/value-objects';
-import { createStore } from '../utils/createStore';
+import { createStore } from '../../utils/createStore';
 
 interface NavigationState {
   path: ReadonlyArray<NavigationNode>;

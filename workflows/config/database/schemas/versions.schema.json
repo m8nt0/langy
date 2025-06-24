@@ -1,0 +1,56 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "TechVersion",
+    "description": "A specific version of a TechObject.",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string",
+            "format": "uuid"
+        },
+        "tech_object_id": {
+            "type": "string",
+            "format": "uuid"
+        },
+        "parent_version_id": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "format": "uuid"
+        },
+        "version": {
+            "type": "string",
+            "description": "Semantic version string (e.g., '3.12.1')."
+        },
+        "metadata": {
+            "$ref": "#/definitions/metadata"
+        },
+        "viewers_data": {
+            "$ref": "#/definitions/viewersData"
+        }
+    },
+    "required": [
+        "id",
+        "tech_object_id",
+        "version"
+    ],
+    "definitions": {
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "release_date": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "viewersData": {
+            "type": "object",
+            "description": "A JSONB column holding all 6 viewer data structures."
+        }
+    }
+}

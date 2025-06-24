@@ -29,8 +29,9 @@ export class CreateTechObjectUseCase {
       return versionDtos.map(dto => new TechVersion(
           dto.id,
           new VersionNumber(dto.version.major, dto.version.minor, dto.version.patch),
-          dto.metadata,
-          this.mapVersionsFromDto(dto.children) // Recursively map children
+          // dto.metadata,
+          this.mapVersionsFromDto(dto.children), // Recursively map children
+          dto.viewersData as CompleteViewerData
       ));
   }
 

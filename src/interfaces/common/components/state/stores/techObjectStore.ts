@@ -1,6 +1,6 @@
 import { TechObjectDto } from '../../../../../core/application/dto';
 import { TechObject } from '../../../../../core/domain/entities';
-import { createStore } from '../utils/createStore'; // A simple store utility
+import { createStore } from '../../utils/createStore'; // A simple store utility
 
 interface TechObjectState {
     techObjects: Record<string, TechObjectDto>; // Stored by ID for easy lookup

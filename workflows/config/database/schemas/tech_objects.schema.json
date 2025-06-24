@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "TechObject",
+    "description": "The root entity for a technology like a language or framework.",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "name": {
+        "type": "string",
+        "description": "The common name of the technology."
+      },
+      "level": {
+        "type": "integer",
+        "description": "The abstraction level (1: Language, 2: Library, etc.)."
+      },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "description": { "type": "string" },
+          "official_doc": { "type": "string", "format": "uri" },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      },
+      "created_at": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "updated_at": {
+        "type": "string",
+        "format": "date-time"
+      }
+    },
+    "required": ["id", "name", "level"]
+  }
