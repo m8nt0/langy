@@ -22,3 +22,7 @@ perfect_commit.sh
 /.k
 */.k
 /*/.k
+
+/node_modules
+*/node_modules
+/*/node_modules
