@@ -1,0 +1,19 @@
+{
+    "development": {
+        "adapter": "postgresql",
+        "host": "localhost",
+        "port": 5432,
+        "user": "devuser",
+        "dbName": "langy_dev_db"
+    },
+    "production": {
+        "adapter": "postgresql",
+        "host": {
+            "fromEnv": "PG_HOST"
+        },
+        "port": 5432,
+        "user": "produser",
+        "dbName": "langy_prod_db",
+        "ssl": true
+    }
+}

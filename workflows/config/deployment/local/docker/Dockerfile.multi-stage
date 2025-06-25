@@ -1,0 +1,41 @@
+# ---- Base Stage ----
+# Use a Node.js base image to get npm/pnpm/yarn
+FROM node:20-alpine as base
+WORKDIR /app
+
+# ---- Dependencies Stage ----
+FROM base as deps
+COPY package.json pnpm-lock.yaml* ./
+# Use pnpm, but you can replace with npm or yarn
+RUN npm install -g pnpm
+RUN pnpm install --frozen-lockfile
+
+# ---- Build Stage ----
+# Build the Svelte application
+FROM base as builder
+WORKDIR /src
+COPY --from=deps /src/node_modules ./node_modules
+COPY . .
+# This command runs the build script defined in your package.json
+# It should generate a static build in the 'dist' folder
+RUN npm run build
+
+# ---- Production Stage ----
+# Use a lightweight Nginx server to serve the static files
+FROM nginx:1.27-alpine as production
+WORKDIR /usr/share/nginx/html
+
+# Copy the server configuration
+COPY workflows/config/deployment/local/server/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Remove the default Nginx welcome page
+RUN rm -rf ./*
+
+# Copy the built application from the builder stage
+COPY --from=builder /app/dist .
+
+# Expose the port Nginx will run on
+EXPOSE 80
+
+# The command to start Nginx
+CMD ["nginx", "-g", "daemon off;"]

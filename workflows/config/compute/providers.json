@@ -1,0 +1,19 @@
+{
+    "defaultProvider": "local",
+    "providers": [
+        {
+            "name": "aws-lambda",
+            "region": "us-east-1",
+            "runtime": "nodejs18.x"
+        },
+        {
+            "name": "gcp-cloud-function",
+            "region": "us-central1",
+            "runtime": "nodejs18"
+        },
+        {
+            "name": "local",
+            "description": "Uses local machine processes."
+        }
+    ]
+}

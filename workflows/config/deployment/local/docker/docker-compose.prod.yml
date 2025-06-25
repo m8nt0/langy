@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  # Production service builds from the Dockerfile
+  frontend-prod:
+    container_name: langy-frontend-prod
+    build:
+      context: ../../../.. # Root of the project
+      dockerfile: workflows/config/deployment/local/docker/Dockerfile.multi-stage
+    ports:
+      - "8080:80" # Map host port 8080 to container port 80

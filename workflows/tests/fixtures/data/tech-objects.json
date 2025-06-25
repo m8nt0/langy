@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Svelte",
+    "level": 2,
+    "metadata": {
+      "description": "A radical new approach to building user interfaces",
+      "category": "frontend",
+      "website": "https://svelte.dev"
+    }
+  },
+  {
+    "name": "PostgreSQL",
+    "level": 3,
+    "metadata": {
+      "description": "The world's most advanced open source relational database",
+      "category": "database",
+      "website": "https://www.postgresql.org"
+    }
+  },
+  {
+    "name": "TypeScript",
+    "level": 2,
+    "metadata": {
+      "description": "Typed superset of JavaScript that compiles to plain JavaScript",
+      "category": "language",
+      "website": "https://www.typescriptlang.org"
+    }
+  },
+  {
+    "name": "Docker",
+    "level": 2,
+    "metadata": {
+      "description": "Platform for developing, shipping, and running applications in containers",
+      "category": "devops",
+      "website": "https://www.docker.com"
+    }
+  },
+  {
+    "name": "Node.js",
+    "level": 2,
+    "metadata": {
+      "description": "JavaScript runtime built on Chrome's V8 JavaScript engine",
+      "category": "runtime",
+      "website": "https://nodejs.org"
+    }
+  }
+] 

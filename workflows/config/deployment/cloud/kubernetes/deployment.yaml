@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: langy-frontend-deployment
+  labels:
+    app: langy-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: langy-frontend
+  template:
+    metadata:
+      labels:
+        app: langy-frontend
+    spec:
+      containers:
+      - name: langy-frontend
+        # The image would be built and pushed to a registry (e.g., Docker Hub, GCR)
+        image: your-registry/langy-frontend:latest
+        ports:
+        - containerPort: 80

@@ -1,0 +1,21 @@
+# This template creates an S3 bucket configured for static website hosting.
+AWSTemplateFormatVersion: '2010-09-09'
+Description: S3 bucket for hosting the Langy Svelte frontend.
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: langy-frontend-bucket # Bucket names must be globally unique
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+
+Outputs:
+  WebsiteURL:
+    Value: !GetAtt S3Bucket.WebsiteURL
+    Description: URL for the website hosted on S3.
+  BucketName:
+    Value: !Ref S3Bucket
+    Description: Name of the S3 bucket.

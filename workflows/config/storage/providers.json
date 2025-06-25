@@ -1,0 +1,18 @@
+{
+    "defaultProvider": "local-disk",
+    "providers": [
+        {
+            "name": "aws-s3",
+            "region": "us-east-1",
+            "defaultBucket": "langy-storage"
+        },
+        {
+            "name": "ipfs",
+            "description": "Uses the InterPlanetary File System via a public gateway."
+        },
+        {
+            "name": "local-disk",
+            "basePath": "/var/data/langy"
+        }
+    ]
+}

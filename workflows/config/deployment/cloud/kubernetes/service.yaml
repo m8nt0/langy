@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: langy-frontend-service
+spec:
+  selector:
+    app: langy-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer # Exposes the service externally using a cloud provider's load balancer

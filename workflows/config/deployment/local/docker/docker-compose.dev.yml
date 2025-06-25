@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  # Development service for the Svelte frontend
+  frontend-dev:
+    container_name: langy-frontend-dev
+    image: node:20-alpine
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm run dev"
+    ports:
+      - "5173:5173" # Expose the Vite dev server port
+    working_dir: /app
+    volumes:
+      # Mount the entire src directory for hot-reloading
+      - ../../../../src:/app/src
+      - ../../../../public:/app/public
+      - ../../../../package.json:/app/package.json
+      - ../../../../pnpm-lock.yaml:/app/pnpm-lock.yaml
+      - ../../../../svelte.config.js:/app/svelte.config.js
+      - ../../../../tsconfig.json:/app/tsconfig.json
+      - ../../../../vite.config.ts:/app/vite.config.ts
+  
+  # ** UNCOMMENTED TO SERVE FOR THE PURPOSE OF LOCAL DEV
+  # Database service for local development
+  postgres-db:
+    container_name: langy-postgres-dev
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=devpass
+      - POSTGRES_DB=langy_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
