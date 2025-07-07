@@ -7,6 +7,18 @@ export type TemporalRelationType =
     | 'REVIVED_BY' | 'MADE_OBSOLETE_BY' | 'CONCURRENT_VERSIONS'
     | 'EVOLUTION_PATH' | 'TIMELINE_OVERLAP' | 'TIMELINE_GAP';
 
+/**
+
+export type TemporalRelationType = 
+  | 'PREDATES'           // C PREDATES Java
+  | 'SUCCEEDS'           // Rust SUCCEEDS C++
+  | 'COEXISTS_WITH'      // React COEXISTS_WITH Vue
+  | 'MADE_OBSOLETE_BY'   // Flash MADE_OBSOLETE_BY HTML5
+  | 'REVIVED_BY'         // Lisp REVIVED_BY AI boom
+  | 'TIMELINE_OVERLAP';  // The x86 and ARM timelines overlap
+
+**/
+
 export class TemporalRelationship {
     constructor(
         public readonly sourceId: TechObjectId,

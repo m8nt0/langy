@@ -8,6 +8,17 @@ export type ParadigmRelationType =
     | 'COMPOSABILITY_MATCH' | 'COMPOSABILITY_CONFLICT' | 'PARADIGM_BRIDGES' | 'PARADIGM_CONSTRAINS'
     | 'DESIGN_PHILOSOPHY_ALIGNED' | 'DESIGN_PHILOSOPHY_OPPOSED';
 
+/**
+
+export type ParadigmRelationType = 
+  | 'DESIGN_PHILOSOPHY_ALIGNED'  // Go and Docker have a DESIGN_PHILOSOPHY_ALIGNED around simplicity
+  | 'DESIGN_PHILOSOPHY_OPPOSED'  // Java (verbose, explicit) and Ruby (concise, magic) are often seen as DESIGN_PHILOSOPHY_OPPOSED
+  | 'MENTAL_MODEL_CLASH'       // Object-Oriented and Functional paradigms can have a MENTAL_MODEL_CLASH
+  | 'PARADIGM_SUPERSET'        // C++ is a PARADIGM_SUPERSET of C
+  | 'ABSTRACTION_HIGHER'       // Python provides a higher ABSTRACTION than C
+  | 'COMPOSABILITY_MATCH';     // Unix tools have a strong COMPOSABILITY_MATCH
+
+**/
 export class ParadigmRelationship {
     constructor(
         public readonly sourceId: TechObjectId,

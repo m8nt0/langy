@@ -1,6 +1,6 @@
 // src/core/domain/repositories/IRelationshipRepository.ts
 import { Relationship, RelationshipType } from '../../../domain/entities/Relationship';
-import { TechObjectId } from '../../../domain/value-objects/TechObjectId';
+import { TechObjectId } from '../../../../domain/value-objects/TechObjectId';
 
 export interface RelationshipFilter {
   sourceId?: TechObjectId;

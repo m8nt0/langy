@@ -8,6 +8,18 @@ export type SystemRelationType =
   | 'HARDWARE_COMPATIBLE' | 'HARDWARE_INCOMPATIBLE' | 'EXECUTION_COMPATIBLE' | 'EXECUTION_INCOMPATIBLE'
   | 'SCALABILITY_SIMILAR' | 'SCALABILITY_BETTER' | 'SCALABILITY_WORSE';
 
+/**
+
+export type SystemRelationType = 
+  | 'COMPILES_TO_SAME_TARGET' // Rust and C++ can COMPILE_TO_SAME_TARGET (e.g., ARM)
+  | 'EXECUTION_COMPATIBLE'    // Java and Kotlin are EXECUTION_COMPATIBLE on the JVM
+  | 'PERFORMANCE_FASTER_THAN' // Go is often PERFORMANCE_FASTER_THAN Python
+  | 'MEMORY_EFFICIENT_THAN'   // C is more MEMORY_EFFICIENT_THAN Java
+  | 'HARDWARE_DEPENDENT'      // CUDA is HARDWARE_DEPENDENT on NVIDIA GPUs
+  | 'SCALES_BETTER_THAN';     // Elixir SCALES_BETTER_THAN Rails for concurrency
+
+**/
+
 export class SystemRelationship {
   constructor(
     public readonly sourceId: TechObjectId,

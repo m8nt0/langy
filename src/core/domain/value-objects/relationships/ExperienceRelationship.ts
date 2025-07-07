@@ -5,8 +5,21 @@ export type ExperienceRelationType =
     | 'COMMUNITY_OVERLAP' | 'COMMUNITY_ISOLATED' | 'COMMUNITY_COMPETITIVE'
     | 'DOCUMENTATION_BETTER' | 'DOCUMENTATION_WORSE' | 'DOCUMENTATION_SIMILAR'
     | 'FEEDBACK_FASTER' | 'FEEDBACK_SLOWER' | 'FEEDBACK_SIMILAR'
-    | 'CUSTOMIZATION_MORE' | 'CUSTOMIZATION_LESS' | 'CUSTOMIZATION_SIMILAR' | 'BEGINNER_FRIENDLY_THAN' | 'EXPERT_ORIENTED_THAN' | 'SKILL_LEVEL_SIMILAR' | 'ONBOARDING_SMOOTHER' | 'ONBOARDING_STEEPER';
+    | 'CUSTOMIZATION_MORE' | 'CUSTOMIZATION_LESS' | 'CUSTOMIZATION_SIMILAR' 
+    | 'BEGINNER_FRIENDLY_THAN' | 'EXPERT_ORIENTED_THAN' | 'SKILL_LEVEL_SIMILAR' 
+    | 'ONBOARDING_SMOOTHER' | 'ONBOARDING_STEEPER';
 
+/**
+
+export type ExperienceRelationType = 
+  | 'LEARNING_CURVE_STEEPER'   // Rust has a LEARNING_CURVE_STEEPER than Python
+  | 'ONBOARDING_SMOOTHER'      // Ruby on Rails has an ONBOARDING_SMOOTHER than vanilla Node.js
+  | 'COMMUNITY_OVERLAP'        // The Data Science communities for Python and R have COMMUNITY_OVERLAP
+  | 'DOCUMENTATION_BETTER'     // React's DOCUMENTATION is often considered BETTER than Angular's
+  | 'BEGINNER_FRIENDLY_THAN'   // Python is more BEGINNER_FRIENDLY_THAN C++
+  | 'DESIGNED_FOR_EXPERTS';    // Haskell is often DESIGNED_FOR_EXPERTS in functional programming
+
+**/
 export class ExperienceRelationship {
     constructor(
         public readonly sourceId: TechObjectId,

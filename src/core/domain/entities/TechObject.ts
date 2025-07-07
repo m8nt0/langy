@@ -11,6 +11,7 @@ import { cloneDeep, merge } from 'lodash';
 export class TechVersion {
   constructor(
     public readonly id: TechObjectId,
+    // public readonly name: string,
     public readonly version: VersionNumber,
     // public readonly metadata: TechObjectMetadata,
     public readonly children: TechVersion[],

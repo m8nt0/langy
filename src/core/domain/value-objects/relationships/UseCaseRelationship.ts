@@ -9,6 +9,17 @@ export type UseCaseRelationType =
     | 'MATURITY_SIMILAR' | 'MATURITY_HIGHER' | 'MATURITY_LOWER'
     | 'TARGET_AUDIENCE_SAME' | 'TARGET_AUDIENCE_DIFFERENT';
 
+/**
+
+export type UseCaseRelationType = 
+  | 'SAME_DOMAIN'           // PyTorch and TensorFlow are in the SAME_DOMAIN
+  | 'COMPLEMENTARY_DOMAIN'  // SQL and Django are in a COMPLEMENTARY_DOMAIN
+  | 'COMPETING_IN_DOMAIN'   // Angular and React are COMPETING_IN_DOMAIN (Frontend Web)
+  | 'ECOSYSTEM_OVERLAP'     // Pandas and NumPy have a strong ECOSYSTEM_OVERLAP
+  | 'INTEGRATION_FRIENDLY'  // FastAPI is INTEGRATION_FRIENDLY with Pydantic
+  | 'TARGET_AUDIENCE_SAME'; // Swift and Objective-C have the TARGET_AUDIENCE_SAME
+
+**/
 export class UseCaseRelationship {
     constructor(
         public readonly sourceId: TechObjectId,

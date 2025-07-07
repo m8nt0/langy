@@ -2,14 +2,26 @@
 import { TechObjectId } from '../TechObjectId';
 
 export type StructureRelationType =
-  | 'DEPENDS_ON' | 'DEPENDANT_OF'
-  | 'EXTENDS' | 'EXTENDED_BY'
+  | 'DEPENDS_ON' | 'DEPENDANT_OF' // prio: how so , exp: can be Partials or full 
+  | 'EXTENDS' | 'EXTENDED_BY' // 
   | 'IMPLEMENTS' | 'IMPLEMENTED_BY'
-  | 'USES' | 'USED_BY'
-  | 'ABSTRACTS_TO' | 'ABSTRACTS_FROM'
-  | 'COMPETES_WITH'
+  | 'USES' | 'USED_BY' // X
+  | 'ABSTRACTS_TO' | 'ABSTRACTS_FROM' // Deal with 
+  | 'COMPETES_WITH' // X
   | 'REPLACES' | 'REPLACED_BY'
   | 'INFLUENCES' | 'INFLUENCED_BY';
+
+/**
+
+export type StructuralRelationType = 
+  | 'DEPENDS_ON'       // React DEPENDS_ON JavaScript
+  | 'IMPLEMENTS'       // Linux IMPLEMENTS the POSIX standard
+  | 'EXTENDS'          // TypeScript EXTENDS JavaScript
+  | 'ABSTRACTS_FROM'   // The OS ABSTRACTS_FROM the physical hardware
+  | 'REPLACES'         // Wayland REPLACES X11
+  | 'INFLUENCES';      // Lisp's design INFLUENCES JavaScript's
+ 
+**/
 
 export class StructureRelationship {
   constructor(
@@ -35,7 +47,7 @@ export class StructureRelationship {
   }
 
   isDirectional(): boolean {
-    return ['DEPENDS_ON', 'EXTENDS', 'IMPLEMENTS', 'USES', 'ABSTRACTS_TO', 'REPLACES', 'INFLUENCES'].includes(this.type);
+    return ['DEPENDS_ON', 'EXTENDS', 'IMPLEMENTS', 'USES', 'ABSTRACTS_TO','REPLACES', 'INFLUENCES'].includes(this.type);
   }
 
   getReverse(): StructureRelationType | null {
